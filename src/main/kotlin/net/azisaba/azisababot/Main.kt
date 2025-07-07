@@ -4,7 +4,12 @@ import com.charleskorn.kaml.Yaml
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import net.azisaba.azisababot.config.Config
+import net.azisaba.azisababot.server.Server
+import net.azisaba.azisababot.server.ServerTable
 import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -14,6 +19,18 @@ val config: Config = config()
 val dataSource: HikariDataSource = dataSource()
 
 fun main() {
+    transaction {
+        SchemaUtils.create(ServerTable)
+        ServerTable.selectAll().forEach { row ->
+            Server.load(
+                row[ServerTable.id],
+                row[ServerTable.name],
+                row[ServerTable.host],
+                row[ServerTable.port]
+            )
+        }
+    }
+
     dataSource.close()
 }
 
