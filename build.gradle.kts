@@ -10,6 +10,10 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.hikari.cp)
+    implementation(libs.mariadb.jdbc)
     testImplementation(kotlin("test"))
 }
 
