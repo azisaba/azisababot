@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version libs.versions.kotlin.get()
+    kotlin("plugin.serialization") version libs.versions.kotlin.get()
 }
 
 group = "net.azisaba"
@@ -13,7 +14,10 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.hikari.cp)
+    implementation(libs.kaml)
+    implementation(libs.logback.classic)
     implementation(libs.mariadb.jdbc)
+
     testImplementation(kotlin("test"))
 }
 
