@@ -1,8 +1,9 @@
 package net.azisaba.azisababot.server
 
 import net.azisaba.azisababot.server.impl.ServerImpl
+import net.azisaba.azisababot.server.snapshot.SnapshotsHolder
 
-interface Server {
+interface Server : SnapshotsHolder {
     val id: String
 
     var name: String
@@ -14,7 +15,7 @@ interface Server {
     fun remove()
 
     companion object {
-        val ID_REGEX: Regex = Regex("^[a-z0-9_]{1,16}$")
+        val ID_REGEX: Regex = Regex("^(?!.*server)[a-z0-9_]{1,16}$")
         val NAME_REGEX: Regex = Regex("^.{0,16}$")
 
         internal val instances: MutableSet<Server> = mutableSetOf()

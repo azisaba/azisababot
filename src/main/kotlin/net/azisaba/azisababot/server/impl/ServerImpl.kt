@@ -2,12 +2,12 @@ package net.azisaba.azisababot.server.impl
 
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.ServerTable
+import net.azisaba.azisababot.server.snapshot.Snapshot
+import net.azisaba.azisababot.server.snapshot.SnapshotTable
+import net.azisaba.azisababot.server.snapshot.query.SnapshotQuery
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.v1.jdbc.deleteWhere
-import org.jetbrains.exposed.v1.jdbc.insert
-import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.jetbrains.exposed.v1.jdbc.update
 
 internal class ServerImpl(
     override var id: String,
@@ -47,14 +47,41 @@ internal class ServerImpl(
             }
         }
 
+    override val snapshotTable: SnapshotTable = SnapshotTable(id).also {
+        transaction {
+            SchemaUtils.create(it)
+        }
+    }
+
     init {
         Server.instances += this
     }
+
+    override fun <O> query(query: SnapshotQuery<O>, option: O): List<Snapshot> = query.query(snapshotTable, option)
 
     override fun remove() {
         Server.instances -= this
         transaction {
             ServerTable.deleteWhere { id eq this@ServerImpl.id }
+        }
+    }
+
+    override fun plusAssign(value: Snapshot) {
+        transaction {
+            snapshotTable.insert {
+                it[timestamp] = value.timestamp
+                it[version] = value.version
+                it[protocol] = value.protocol
+                it[onlinePlayers] = value.onlinePlayers?.toUInt()
+                it[maxPlayers] = value.maxPlayers?.toUInt()
+                it[ping] = value.ping?.toULong()
+            }
+        }
+    }
+
+    override fun minusAssign(value: Snapshot) {
+        transaction {
+            snapshotTable.deleteWhere { snapshotTable.timestamp eq value.timestamp }
         }
     }
 
