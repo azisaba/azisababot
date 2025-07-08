@@ -1,3 +1,5 @@
+app:
+  tokenEnv: APP_TOKEN
 database:
   url: jdbc:mariadb://localhost:3306/azisababot
   usernameEnv: DATABASE_USERNAME
