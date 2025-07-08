@@ -1,16 +1,20 @@
 package net.azisaba.azisababot.server
 
-import net.azisaba.azisababot.server.impl.ServerImpl
-import net.azisaba.azisababot.server.snapshot.SnapshotsHolder
+import net.azisaba.azisababot.server.endpoint.Endpoint
+import net.azisaba.azisababot.server.snapshot.Snapshots
+import org.jetbrains.exposed.v1.core.ResultRow
+import java.util.UUID
 
-interface Server : SnapshotsHolder {
-    val id: String
+interface Server {
+    val uuid: UUID
 
-    var name: String
+    val serverId: String
 
-    var host: String
+    var displayName: String
 
-    var port: Int
+    val endpoints: List<Endpoint>
+
+    val snapshots: Snapshots
 
     fun remove()
 
@@ -20,26 +24,25 @@ interface Server : SnapshotsHolder {
 
         internal val instances: MutableSet<Server> = mutableSetOf()
 
-        fun server(id: String): Server? = instances.find { it.id == id }
+        fun server(id: String): Server? = instances.find { it.serverId == id }
 
         fun servers(): Set<Server> = instances.toSet()
 
-        internal fun load(id: String, name: String, host: String, port: Int): Server = ServerImpl(id, name, host, port)
+        internal fun load(row: ResultRow): Server = ServerImpl(
+            uuid = row[ServerTable.uuid],
+            serverId = row[ServerTable.serverId],
+            displayName = row[ServerTable.displayName]
+        )
     }
 
     @ServerDsl
     interface Builder {
-        var id: String?
+        var serverId: String?
 
-        var name: String?
+        var displayName: String?
 
-        var host: String?
-
-        var port: Int
+        val endpoints: MutableList<Endpoint>
 
         fun build(): Server
     }
 }
-
-@DslMarker
-annotation class ServerDsl()

@@ -9,6 +9,7 @@ interface DataType<T> {
     fun read(input: InputStream): T
 
     companion object {
+        val LONG: DataType<Long> = LongDataType
         val SHORT: DataType<Short> = ShortDataType
         val STRING: DataType<String> = StringDataType
         val VAR_INT: DataType<Int> = VarIntDataType

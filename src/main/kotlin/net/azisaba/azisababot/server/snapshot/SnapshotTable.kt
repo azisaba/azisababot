@@ -10,13 +10,19 @@ open class SnapshotTable(tableName: String) : Table(tableName) {
 
     val protocol: Column<Int?> = integer("protocol").nullable()
 
-    val onlinePlayers: Column<UInt?> = uinteger("online_players").nullable()
+    val onlinePlayers: Column<Int?> = integer("online_players").nullable()
 
-    val maxPlayers: Column<UInt?> = uinteger("max_players").nullable()
+    val maxPlayers: Column<Int?> = integer("max_players").nullable()
+
+    val favicon: Column<String?> = varchar("favicon", 225).nullable()
+
+    val description: Column<String?> = varchar("description", 225).nullable()
 
     val ping: Column<ULong?> = ulong("ping").nullable()
 
     override val primaryKey: PrimaryKey = PrimaryKey(timestamp)
 
-    internal object Dummy : SnapshotTable("dummy")
+    companion object {
+        internal val dummy: SnapshotTable = SnapshotTable("dummy")
+    }
 }

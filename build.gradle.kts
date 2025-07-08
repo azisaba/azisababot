@@ -11,10 +11,15 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.adventure.api)
+    implementation(libs.adventure.gson)
+    implementation(libs.cronutils)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.hikari.cp)
     implementation(libs.kaml)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.logback.classic)
     implementation(libs.mariadb.jdbc)
 

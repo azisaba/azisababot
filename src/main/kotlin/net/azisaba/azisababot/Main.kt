@@ -22,12 +22,7 @@ fun main() {
     transaction {
         SchemaUtils.create(ServerTable)
         ServerTable.selectAll().forEach { row ->
-            Server.load(
-                row[ServerTable.id],
-                row[ServerTable.name],
-                row[ServerTable.host],
-                row[ServerTable.port]
-            )
+            Server.load(row)
         }
     }
 

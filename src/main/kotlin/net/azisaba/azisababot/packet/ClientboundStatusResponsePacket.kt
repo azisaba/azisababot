@@ -1,11 +1,37 @@
 package net.azisaba.azisababot.packet
 
-import net.azisaba.azisababot.packet.impl.ClientboundStatusResponsePacketImpl
+import kotlinx.serialization.Serializable
+import net.azisaba.azisababot.util.ComponentSerializer
+import net.kyori.adventure.text.Component
 
 interface ClientboundStatusResponsePacket : Packet {
-    var jsonResponse: String?
+    var jsonResponse: JsonResponse?
 
-    companion object {
-        fun create(): ClientboundStatusResponsePacket = ClientboundStatusResponsePacketImpl()
-    }
+    @Serializable
+    data class JsonResponse(
+        val version: Version,
+        val players: Players,
+        @Serializable(with = ComponentSerializer::class)
+        val description: Component,
+        val favicon: String
+    )
+
+    @Serializable
+    data class Version(
+        val name: String,
+        val protocol: Int
+    )
+
+    @Serializable
+    data class Players(
+        val online: Int,
+        val max: Int,
+        val sample: List<PlayerSample>
+    )
+
+    @Serializable
+    data class PlayerSample(
+        val id: String,
+        val name: String
+    )
 }

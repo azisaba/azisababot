@@ -63,6 +63,9 @@ internal abstract class PacketImpl : Packet {
         }
     }
 
+    protected fun long(index: Int, name: String, default: Long? = null): Packet.Field<Long> =
+        defineField(index, name, DataType.LONG, default)
+
     protected fun short(index: Int, name: String, default: Short? = null): Packet.Field<Short> =
         defineField(index, name, DataType.SHORT, default)
 
