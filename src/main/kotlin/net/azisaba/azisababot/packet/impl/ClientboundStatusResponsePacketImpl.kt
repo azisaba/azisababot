@@ -10,8 +10,14 @@ internal class ClientboundStatusResponsePacketImpl : PacketImpl(), ClientboundSt
     override val bound: Packet.Bound = Packet.Bound.CLIENT
 
     override var jsonResponse: ClientboundStatusResponsePacket.JsonResponse?
-        get() = get(jsonResponseField)?.let { Json.decodeFromString(it) }
-        set(value) = set(jsonResponseField, value?.let { Json.encodeToString(it) })
+        get() {
+            return get(jsonResponseField)?.let { json.decodeFromString(it) }
+        }
+        set(value) = set(jsonResponseField, value?.let { json.encodeToString(it) })
 
     private val jsonResponseField: Packet.Field<String> = string(0, "JSON Response")
+
+    private val json: Json = Json {
+        ignoreUnknownKeys = true
+    }
 }

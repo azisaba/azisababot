@@ -26,7 +26,7 @@ interface ClientboundStatusResponsePacket : Packet {
     data class Players(
         val online: Int,
         val max: Int,
-        val sample: List<PlayerSample>
+        val sample: List<PlayerSample>? = null
     )
 
     @Serializable
