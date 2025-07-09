@@ -1,7 +1,7 @@
 [versions]
 adventure = "4.22.0"
 cronutils = "9.2.1"
-exposed = "1.0.0-beta-3"
+exposed = "1.0.0-beta-4"
 hikari = "6.3.0"
 kaml = "0.73.0"
 kord = "0.15.0"

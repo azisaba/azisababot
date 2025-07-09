@@ -1,15 +1,12 @@
 package net.azisaba.azisababot.server
 
-import net.azisaba.azisababot.server.endpoint.Endpoint
-import net.azisaba.azisababot.server.endpoint.EndpointList
-import net.azisaba.azisababot.server.endpoint.EndpointRepository
-import net.azisaba.azisababot.server.endpoint.EndpointTable
-import net.azisaba.azisababot.server.snapshot.SnapshotTable
-import net.azisaba.azisababot.server.snapshot.Snapshots
-import net.azisaba.azisababot.server.snapshot.SnapshotsImpl
+import net.azisaba.azisababot.crawler.snapshot.SnapshotsImpl
+import net.azisaba.azisababot.server.endpoints.EndpointRepositoryImpl
+import net.azisaba.azisababot.server.endpoints.EndpointsImpl
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import java.net.InetSocketAddress
 import java.util.*
 
 internal class ServerImpl(
@@ -19,7 +16,7 @@ internal class ServerImpl(
 ) : Server {
     override var displayName: String = displayName
         set(value) {
-            require(Server.NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.NAME_REGEX.pattern}" }
+            require(Server.DISPLAY_NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}" }
             field = value
             transaction {
                 ServerTable.update({ ServerTable.serverId eq id }) {
@@ -28,21 +25,9 @@ internal class ServerImpl(
             }
         }
 
-    override val endpoints: MutableList<Endpoint> by lazy { EndpointList(EndpointRepository(endpointTable)) }
+    override val endpoints: EndpointsImpl = EndpointsImpl(EndpointRepositoryImpl(this))
 
-    override val snapshots: Snapshots by lazy { SnapshotsImpl(snapshotTable) }
-
-    private val endpointTable: EndpointTable = EndpointTable("${uuid.toString().replace('-', '_')}_endpoint").also {
-        transaction {
-            SchemaUtils.create(it)
-        }
-    }
-
-    private val snapshotTable: SnapshotTable = SnapshotTable("${uuid.toString().replace('-', '_')}_snapshot").also {
-        transaction {
-            SchemaUtils.create(it)
-        }
-    }
+    override val snapshots: SnapshotsImpl = SnapshotsImpl(this)
 
     init {
         Server.instances += this
@@ -52,34 +37,46 @@ internal class ServerImpl(
         Server.instances -= this
         transaction {
             ServerTable.deleteWhere { serverId eq this@ServerImpl.serverId }
-            SchemaUtils.drop(endpointTable)
+            SchemaUtils.drop(endpoints.repository.table)
+            SchemaUtils.drop(snapshots.table)
         }
     }
 
+    internal data class EndpointImpl(
+        override val host: String,
+        override val port: Int
+    ) : Server.Endpoint {
+        override fun toINetSocketAddress(): InetSocketAddress = InetSocketAddress.createUnresolved(host, port)
+
+        override fun toString(): String = "$host:$port"
+    }
+
     internal class BuilderImpl : Server.Builder {
+        override var uuid: UUID = UUID.randomUUID()
+
         override var serverId: String? = null
             set(value) {
-                require(value == null || Server.ID_REGEX.matches(value)) { "Invalid id: must match the pattern ${Server.ID_REGEX.pattern}" }
+                require(value == null || Server.SERVER_ID_REGEX.matches(value)) { "Invalid id: must match the pattern ${Server.SERVER_ID_REGEX.pattern}" }
                 field = value
             }
 
         override var displayName: String? = null
             set(value) {
-                require(value == null || Server.NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.NAME_REGEX.pattern}" }
+                require(value == null || Server.DISPLAY_NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}" }
                 field = value
             }
 
-        override val endpoints: MutableList<Endpoint> = mutableListOf()
-
-        private val uuid: UUID = UUID.randomUUID()
-
         override fun build(): Server {
-            checkNotNull(serverId) { "ID not set" }
+            checkNotNull(serverId) { "Server ID not set" }
             checkNotNull(displayName) { "Name not set" }
 
             transaction {
-                if (ServerTable.selectAll().where { ServerTable.serverId eq id }.any()) {
-                    throw IllegalStateException("ID is already in use: $id")
+                if (ServerTable.selectAll().where { ServerTable.uuid eq uuid }.any()) {
+                    throw IllegalStateException("UUID is already in use: $uuid")
+                }
+
+                if (ServerTable.selectAll().where { ServerTable.serverId eq serverId!! }.any()) {
+                    throw IllegalStateException("Server ID is already in use: $serverId")
                 }
 
                 ServerTable.insert {
@@ -89,9 +86,7 @@ internal class ServerImpl(
                 }
             }
 
-            return ServerImpl(uuid, serverId!!, displayName!!).apply {
-                endpoints.addAll(this@BuilderImpl.endpoints)
-            }
+            return ServerImpl(uuid, serverId!!, displayName!!)
         }
     }
 }

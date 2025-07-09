@@ -1,6 +1,9 @@
 package net.azisaba.azisababot
 
 import com.charleskorn.kaml.Yaml
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.parser.CronParser
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import net.azisaba.azisababot.config.Config
@@ -17,6 +20,8 @@ import java.nio.file.StandardCopyOption
 val config: Config = config()
 
 val dataSource: HikariDataSource = dataSource()
+
+val cronParser: CronParser = CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.UNIX))
 
 fun main() {
     transaction {

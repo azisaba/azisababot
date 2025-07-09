@@ -4,7 +4,7 @@ import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table
 import java.util.UUID
 
-object ServerTable : Table("servers") {
+object ServerTable : Table("server") {
     val uuid: Column<UUID> = uuid("uuid")
 
     val serverId: Column<String> = varchar("server_id", 16).uniqueIndex()

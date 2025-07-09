@@ -1,9 +1,10 @@
 package net.azisaba.azisababot.server
 
-import net.azisaba.azisababot.server.endpoint.Endpoint
-import net.azisaba.azisababot.server.snapshot.Snapshots
+import net.azisaba.azisababot.crawler.snapshot.Snapshots
+import net.azisaba.azisababot.server.endpoints.Endpoints
 import org.jetbrains.exposed.v1.core.ResultRow
-import java.util.UUID
+import java.net.InetSocketAddress
+import java.util.*
 
 interface Server {
     val uuid: UUID
@@ -12,19 +13,23 @@ interface Server {
 
     var displayName: String
 
-    val endpoints: List<Endpoint>
+    val endpoints: Endpoints
 
     val snapshots: Snapshots
 
     fun remove()
 
     companion object {
-        val ID_REGEX: Regex = Regex("^(?!.*server)[a-z0-9_]{1,16}$")
-        val NAME_REGEX: Regex = Regex("^.{0,16}$")
+        val SERVER_ID_REGEX: Regex = Regex("^(?!.*server)[a-z0-9_]{1,16}$")
+        val DISPLAY_NAME_REGEX: Regex = Regex("^.{0,16}$")
 
         internal val instances: MutableSet<Server> = mutableSetOf()
 
-        fun server(id: String): Server? = instances.find { it.serverId == id }
+        fun server(uuid: UUID): Server? = instances.find { it.uuid == uuid }
+
+        fun server(serverId: String): Server? = instances.find { it.serverId == serverId }
+
+        fun server(block: Builder.() -> Unit): Server = ServerImpl.BuilderImpl().apply(block).build()
 
         fun servers(): Set<Server> = instances.toSet()
 
@@ -35,14 +40,29 @@ interface Server {
         )
     }
 
+    interface Endpoint {
+        val host: String
+
+        val port: Int
+
+        fun toINetSocketAddress(): InetSocketAddress
+
+        companion object {
+            fun of(host: String, port: Int): Endpoint = ServerImpl.EndpointImpl(host, port)
+        }
+    }
+
     @ServerDsl
     interface Builder {
+        var uuid: UUID
+
         var serverId: String?
 
         var displayName: String?
 
-        val endpoints: MutableList<Endpoint>
-
         fun build(): Server
     }
 }
+
+@DslMarker
+annotation class ServerDsl()
