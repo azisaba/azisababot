@@ -57,7 +57,7 @@ class PacketImpl(override val packetType: Packet.Type) : Packet {
         val bodyInput = body.inputStream()
 
         val packetId = bodyInput.read(DataType.VAR_INT)
-        require(packetId == packetType.packetId) { "Invalid packet ID: excepted ${packetType.packetId} but got " }
+        require(packetId == packetType.packetId) { "Invalid packet ID: excepted ${packetType.packetId} but got $packetId" }
 
         for (field in packetType.fields) {
             set(field as Packet.Field<Any>, field.dataType.decode(bodyInput))

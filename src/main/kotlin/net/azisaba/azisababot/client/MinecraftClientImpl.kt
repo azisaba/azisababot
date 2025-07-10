@@ -31,7 +31,7 @@ internal class MinecraftClientImpl(
             handshake(endpoint, output)
             Packet.packet(ServerboundPingRequest).apply {
                 this[ServerboundPingRequest.timestamp] = System.currentTimeMillis()
-            }
+            }.send(output)
 
             val pongResponse = Packet.packet(ClientboundPongResponse).apply {
                 readFrom(input)

@@ -49,7 +49,7 @@ interface Server : Identified {
         fun toINetSocketAddress(): InetSocketAddress
 
         companion object {
-            fun of(host: String, port: Int): Endpoint = ServerImpl.EndpointImpl(host, port)
+            fun of(host: String, port: Int = 25565): Endpoint = ServerImpl.EndpointImpl(host, port)
         }
     }
 
