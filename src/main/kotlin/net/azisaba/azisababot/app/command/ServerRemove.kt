@@ -24,7 +24,7 @@ suspend fun serverRemoveCommand(guild: Guild) = guild.createChatInputCommand("se
     string("server", "Server to be deleted") {
         required = true
         descriptionLocalizations = mutableMapOf(
-            Locale.JAPANESE to "削除するサーバーの識別子"
+            Locale.JAPANESE to "削除するサーバー"
         )
     }
 }
@@ -39,7 +39,7 @@ fun serverRemoveCommand(kord: Kord) = kord.on<GuildChatInputCommandInteractionCr
 
     if (server == null) {
         response.respond {
-            content = ":x: ${serverId}は無効なサーバー識別子です"
+            content = ":x: `${serverId}` は無効なサーバーIDです"
         }
         return@on
     }
@@ -56,7 +56,7 @@ fun serverRemoveCommand(kord: Kord) = kord.on<GuildChatInputCommandInteractionCr
             server.remove()
             message.deleteAllReactions()
             message.edit {
-                content = ":white_check_mark: サーバーを削除しました (`${server.serverId}`)"
+                content = ":white_check_mark: ${server.appNotation()} を削除しました"
             }
         } else {
             message.deleteAllReactions()

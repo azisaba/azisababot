@@ -33,6 +33,8 @@ internal class ServerImpl(
         Server.instances += this
     }
 
+    override fun appNotation(): String = "$displayName (`$serverId`)"
+
     override fun remove() {
         Server.instances -= this
         transaction {

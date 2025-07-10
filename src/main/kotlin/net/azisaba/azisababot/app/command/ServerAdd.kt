@@ -43,7 +43,7 @@ fun serverAddCommand(kord: Kord) = kord.on<GuildChatInputCommandInteractionCreat
             this.displayName = displayName
         }
         response.respond {
-            content = ":white_check_mark: サーバーを追加しました"
+            content = ":white_check_mark: サーバー ${server.appNotation()} を追加しました"
         }
     } catch (e: IllegalStateException) {
         response.respond {

@@ -17,6 +17,8 @@ interface Server {
 
     val snapshots: Snapshots
 
+    fun appNotation(): String
+
     fun remove()
 
     companion object {

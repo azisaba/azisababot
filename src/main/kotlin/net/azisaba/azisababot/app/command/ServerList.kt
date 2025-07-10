@@ -75,7 +75,7 @@ private fun createMessage(pageIndex: Int, messageBuilder: MessageBuilder) {
 
     for (server in servers[pageIndex]) {
         stringBuilder.append('\n')
-        stringBuilder.append("- ${server.displayName} (`${server.serverId}`)")
+        stringBuilder.append("- ${server.appNotation()}")
     }
 
     stringBuilder.append('\n')
