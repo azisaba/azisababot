@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.crawler.snapshot
+package net.azisaba.azisababot.server.snapshot
 
 import com.cronutils.model.time.ExecutionTime
 import net.azisaba.azisababot.cronParser

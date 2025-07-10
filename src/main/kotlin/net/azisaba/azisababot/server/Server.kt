@@ -1,14 +1,13 @@
 package net.azisaba.azisababot.server
 
-import net.azisaba.azisababot.crawler.snapshot.Snapshots
+import net.azisaba.azisababot.Identified
+import net.azisaba.azisababot.server.snapshot.Snapshots
 import net.azisaba.azisababot.server.endpoints.Endpoints
 import org.jetbrains.exposed.v1.core.ResultRow
 import java.net.InetSocketAddress
 import java.util.*
 
-interface Server {
-    val uuid: UUID
-
+interface Server : Identified {
     var serverId: String
 
     var displayName: String
@@ -22,7 +21,7 @@ interface Server {
     fun remove()
 
     companion object {
-        val SERVER_ID_REGEX: Regex = Regex("^(?!.*server)[a-z0-9_]{1,16}$")
+        val SERVER_ID_REGEX: Regex = Regex("^[a-z0-9_]{1,16}$")
         val DISPLAY_NAME_REGEX: Regex = Regex("^.{0,16}$")
 
         internal val instances: MutableSet<Server> = mutableSetOf()

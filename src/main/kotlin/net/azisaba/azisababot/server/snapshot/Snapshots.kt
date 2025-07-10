@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.crawler.snapshot
+package net.azisaba.azisababot.server.snapshot
 
 interface Snapshots {
     operator fun plusAssign(snapshot: Snapshot)

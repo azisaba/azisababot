@@ -11,7 +11,11 @@ import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 
-suspend fun endpointRemoveCommand(guild: Guild) = guild.createChatInputCommand("endpoint-remove", "Remove an endpoint from a Minecraft server") {
+suspend fun endpointRemoveCommand(guild: Guild) = guild.createChatInputCommand("endpoint-remove", "Remove an endpoint from a server") {
+    descriptionLocalizations = mutableMapOf(
+        Locale.JAPANESE to "エンドポイントをサーバーから削除します"
+    )
+
     string("server", "Server to delete endpoint") {
         required = true
         maxLength = 16

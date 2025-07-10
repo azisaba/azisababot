@@ -19,9 +19,9 @@ import java.util.*
 
 private val buttonRegex = Regex("""endpoint-list-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-(\d+)""")
 
-suspend fun endpointListCommand(guild: Guild) = guild.createChatInputCommand("endpoint-list", "List the endpoints for any Minecraft server") {
+suspend fun endpointListCommand(guild: Guild) = guild.createChatInputCommand("endpoint-list", "List the endpoints for a server") {
     descriptionLocalizations = mutableMapOf(
-        Locale.JAPANESE to "任意の Minecraft サーバーのエンドポイントをリスト表示します"
+        Locale.JAPANESE to "サーバーのエンドポイントをリスト表示します"
     )
 
     string("server", "Server to list") {

@@ -1,6 +1,7 @@
 package net.azisaba.azisababot.server
 
-import net.azisaba.azisababot.crawler.snapshot.SnapshotsImpl
+import net.azisaba.azisababot.server.group.ServerGroup
+import net.azisaba.azisababot.server.snapshot.SnapshotsImpl
 import net.azisaba.azisababot.server.endpoints.EndpointRepositoryImpl
 import net.azisaba.azisababot.server.endpoints.EndpointsImpl
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
@@ -52,8 +53,13 @@ internal class ServerImpl(
 
     override fun remove() {
         Server.instances -= this
+
+        ServerGroup.groups(this).forEach { group ->
+            group -= this
+        }
+
         transaction {
-            ServerTable.deleteWhere { serverId eq this@ServerImpl.serverId }
+            ServerTable.deleteWhere { uuid eq this@ServerImpl.uuid }
             SchemaUtils.drop(endpoints.repository.table)
             SchemaUtils.drop(snapshots.table)
         }
@@ -72,28 +78,28 @@ internal class ServerImpl(
         override var uuid: UUID = UUID.randomUUID()
 
         override var serverId: String? = null
-            set(value) {
-                require(value == null || Server.SERVER_ID_REGEX.matches(value)) { "Invalid id: must match the pattern ${Server.SERVER_ID_REGEX.pattern}" }
-                field = value
-            }
 
         override var displayName: String? = null
-            set(value) {
-                require(value == null || Server.DISPLAY_NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}" }
-                field = value
-            }
 
         override fun build(): Server {
             checkNotNull(serverId) { "Server ID not set" }
             checkNotNull(displayName) { "Name not set" }
 
+            check(Server.SERVER_ID_REGEX.matches(serverId!!)) {
+                "Invalid server ID: must match the pattern ${Server.SERVER_ID_REGEX.pattern}"
+            }
+
+            check(Server.DISPLAY_NAME_REGEX.matches(displayName!!)) {
+                "Invalid display name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}"
+            }
+
             transaction {
-                if (ServerTable.selectAll().where { ServerTable.uuid eq uuid }.any()) {
-                    throw IllegalStateException("UUID is already in use: $uuid")
+                check(ServerTable.selectAll().where { ServerTable.uuid eq uuid }.none()) {
+                    "UUID is already in use: $uuid"
                 }
 
-                if (ServerTable.selectAll().where { ServerTable.serverId eq serverId!! }.any()) {
-                    throw IllegalStateException("Server ID is already in use: $serverId")
+                check(ServerTable.selectAll().where { ServerTable.serverId eq serverId!! }.none()) {
+                    "Server ID is already in use: $serverId"
                 }
 
                 ServerTable.insert {

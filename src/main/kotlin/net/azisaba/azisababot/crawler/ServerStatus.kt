@@ -1,7 +1,7 @@
 package net.azisaba.azisababot.crawler
 
 import net.azisaba.azisababot.client.packet.ClientboundStatusResponse
-import net.azisaba.azisababot.crawler.snapshot.SnapshotTable
+import net.azisaba.azisababot.server.snapshot.SnapshotTable
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.jetbrains.exposed.v1.core.ResultRow

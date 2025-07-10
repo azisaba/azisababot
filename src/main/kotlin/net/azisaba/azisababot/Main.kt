@@ -8,8 +8,10 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import net.azisaba.azisababot.app.app
 import net.azisaba.azisababot.config.Config
+import net.azisaba.azisababot.server.group.ServerGroupTable
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.ServerTable
+import net.azisaba.azisababot.server.group.ServerGroup
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -29,6 +31,11 @@ suspend fun main() {
         SchemaUtils.create(ServerTable)
         ServerTable.selectAll().forEach { row ->
             Server.load(row)
+        }
+
+        SchemaUtils.create(ServerGroupTable)
+        ServerGroupTable.selectAll().forEach { row ->
+            ServerGroup.load(row)
         }
     }
 

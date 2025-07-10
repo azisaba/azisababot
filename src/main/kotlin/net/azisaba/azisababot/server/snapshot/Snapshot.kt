@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.crawler.snapshot
+package net.azisaba.azisababot.server.snapshot
 
 import net.azisaba.azisababot.crawler.ServerStatus
 import org.jetbrains.exposed.v1.core.ResultRow

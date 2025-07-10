@@ -13,10 +13,17 @@ suspend fun app() {
             endpointListCommand(guild)
             endpointRemoveCommand(guild)
 
+            groupCreateCommand(guild)
+            groupDeleteCommand(guild)
+            groupListCommand(guild)
+            groupUpdateCommand(guild)
+
             serverAddCommand(guild)
-            serverEditCommand(guild)
+            serverAddToGroupCommand(guild)
             serverListCommand(guild)
             serverRemoveCommand(guild)
+            serverRemoveFromGroupCommand(guild)
+            serverUpdateCommand(guild)
         }
 
         endpointAddCommand(kord)
@@ -24,9 +31,16 @@ suspend fun app() {
         endpointListCommand(kord)
         endpointRemoveCommand(kord)
 
+        groupCreateCommand(kord)
+        groupDeleteCommand(kord)
+        groupListCommand(kord)
+        groupUpdateCommand(kord)
+
         serverAddCommand(kord)
-        serverEditCommand(kord)
+        serverAddToGroupCommand(kord)
         serverListCommand(kord)
         serverRemoveCommand(kord)
+        serverRemoveFromGroupCommand(kord)
+        serverUpdateCommand(kord)
     }
 }

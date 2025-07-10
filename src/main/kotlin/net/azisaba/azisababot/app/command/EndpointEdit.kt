@@ -19,9 +19,9 @@ import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.message.embed
 import net.azisaba.azisababot.server.Server
 
-suspend fun endpointEditCommand(guild: Guild) = guild.createChatInputCommand("endpoint-edit", "Edit the endpoints of any Minecraft server") {
+suspend fun endpointEditCommand(guild: Guild) = guild.createChatInputCommand("endpoint-edit", "Edit the endpoints of a server") {
     descriptionLocalizations = mutableMapOf(
-        Locale.JAPANESE to "任意の Minecraft サーバーのエンドポイントを編集します"
+        Locale.JAPANESE to "サーバーのエンドポイントを編集します"
     )
 
     string("server", "Server to edit") {
