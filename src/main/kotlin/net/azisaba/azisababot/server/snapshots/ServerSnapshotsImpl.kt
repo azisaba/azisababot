@@ -3,6 +3,7 @@ package net.azisaba.azisababot.server.snapshots
 import com.cronutils.model.time.ExecutionTime
 import net.azisaba.azisababot.cronParser
 import net.azisaba.azisababot.server.Server
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.between
@@ -35,6 +36,7 @@ internal class ServerSnapshotsImpl(private val server: Server) : ServerSnapshots
                 it[onlinePlayers] = snapshot.status?.onlinePlayers
                 it[maxPlayers] = snapshot.status?.maxPlayers
                 it[favicon] = snapshot.status?.favicon
+                it[description] = snapshot.status?.description?.let { GsonComponentSerializer.gson().serialize(it) }
                 it[ping] = snapshot.ping
             }
         }
