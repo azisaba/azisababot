@@ -4,6 +4,7 @@ cronutils = "9.2.1"
 exposed = "1.0.0-beta-4"
 hikari = "6.3.0"
 kaml = "0.73.0"
+kandy = "0.8.0"
 kord = "0.15.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.2"
@@ -19,6 +20,7 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 hikari-cp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
+kandy = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandy" }
 kord = { module = "dev.kord:kord-core", version.ref = "kord" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }

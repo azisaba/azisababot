@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.hikari.cp)
     implementation(libs.kaml)
+    implementation(libs.kandy)
     implementation(libs.kord)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
