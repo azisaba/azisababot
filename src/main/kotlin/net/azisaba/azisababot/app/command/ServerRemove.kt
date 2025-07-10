@@ -23,6 +23,7 @@ suspend fun serverRemoveCommand(guild: Guild) = guild.createChatInputCommand("se
 
     string("server", "Server to be deleted") {
         required = true
+        maxLength = 16
         descriptionLocalizations = mutableMapOf(
             Locale.JAPANESE to "削除するサーバー"
         )

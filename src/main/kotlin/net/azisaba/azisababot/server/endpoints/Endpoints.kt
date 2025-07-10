@@ -21,7 +21,11 @@ interface Endpoints : Iterable<Server.Endpoint> {
 
     fun remove(priority: Int): Boolean
 
+    fun removeAll(endpoints: Iterable<Server.Endpoint>): Boolean
+
     fun insertAt(endpoint: Server.Endpoint, priority: Int)
+
+    fun move(fromPriority: Int, toPriority: Int)
 
     fun clear()
 }

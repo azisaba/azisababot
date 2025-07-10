@@ -1,7 +1,9 @@
 package net.azisaba.azisababot.server.endpoints
 
 import net.azisaba.azisababot.server.Server
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -24,7 +26,7 @@ internal class EndpointRepositoryImpl(private val server: Server) : EndpointRepo
 
     override fun selectAll(): List<Server.Endpoint> = transaction {
         table.selectAll()
-            .orderBy(table.priority)
+            .orderBy(table.priority to SortOrder.DESC)
             .map {
                 Server.Endpoint.of(it[table.host], it[table.port])
             }
@@ -40,6 +42,21 @@ internal class EndpointRepositoryImpl(private val server: Server) : EndpointRepo
 
     override fun delete(priority: Int): Unit = transaction {
         table.deleteWhere { table.priority eq priority }
+    }
+
+    override fun delete(endpoints: Iterable<Server.Endpoint>) = transaction {
+        val pairs = endpoints.map { it.host to it.port }.toSet()
+
+        table.deleteWhere {
+            (table.host to table.port) inList pairs
+        }
+
+        val remaining = table.selectAll().orderBy(table.priority).toList()
+        remaining.forEachIndexed { index, row ->
+            table.update({ table.priority eq row[table.priority] }) {
+                it[priority] = index
+            }
+        }
     }
 
     override fun deleteAll(): Unit = transaction {

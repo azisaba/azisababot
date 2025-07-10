@@ -11,6 +11,8 @@ internal interface EndpointRepository {
 
     fun delete(priority: Int)
 
+    fun delete(endpoints: Iterable<Server.Endpoint>)
+
     fun deleteAll()
 
     fun updatePriority(oldPriority: Int, newPriority: Int)

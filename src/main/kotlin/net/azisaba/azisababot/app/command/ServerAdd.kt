@@ -17,6 +17,7 @@ suspend fun serverAddCommand(guild: Guild) = guild.createChatInputCommand("serve
 
     string("server-id", "Server identifier, can contain a-z, 0-9, and underscores") {
         required = true
+        maxLength = 16
         descriptionLocalizations = mutableMapOf(
             Locale.JAPANESE to "サーバーの識別子 a-z、0-9、アンダーバーが使用できます"
         )
@@ -24,6 +25,7 @@ suspend fun serverAddCommand(guild: Guild) = guild.createChatInputCommand("serve
 
     string("display-name", "The display name of the server") {
         required = false
+        maxLength = 16
         descriptionLocalizations = mutableMapOf(
             Locale.JAPANESE to "サーバーを表示するときに使用される名前"
         )

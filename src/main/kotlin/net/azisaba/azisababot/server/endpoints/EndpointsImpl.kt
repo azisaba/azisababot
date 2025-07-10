@@ -45,10 +45,35 @@ internal class EndpointsImpl(internal val repository: EndpointRepositoryImpl) : 
         return true
     }
 
+    override fun removeAll(endpoints: Iterable<Server.Endpoint>): Boolean {
+        val before = repository.count()
+        repository.delete(endpoints)
+        val after = repository.count()
+        return before != after
+    }
+
     override fun insertAt(endpoint: Server.Endpoint, priority: Int) {
         val insertPriority = priority.coerceIn(0, repository.count())
         repository.shiftPriorities(insertPriority, 1)
         repository.insert(endpoint, insertPriority)
+    }
+
+    override fun move(fromPriority: Int, toPriority: Int) {
+        val total = repository.count()
+        if (fromPriority !in 0 until total || toPriority !in 0 until total) {
+            throw IndexOutOfBoundsException("Invalid priority range")
+        }
+        if (fromPriority == toPriority) return
+
+        val endpoint = repository.select(fromPriority) ?: return
+
+        repository.delete(fromPriority)
+        repository.shiftPriorities(
+            fromIndex = if (fromPriority < toPriority) fromPriority + 1 else toPriority,
+            delta = if (fromPriority < toPriority) -1 else 1
+        )
+
+        repository.insert(endpoint, toPriority)
     }
 
     override fun clear() {

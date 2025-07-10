@@ -18,7 +18,7 @@ import net.azisaba.azisababot.server.Server
 private val servers: List<List<Server>>
     get() = Server.servers().chunked(10)
 
-private val buttonRegex = Regex("""server-list-(\d+)""")
+private val buttonRegex: Regex = Regex("""server-list-(\d+)""")
 
 suspend fun serverListCommand(guild: Guild) = guild.createChatInputCommand("server-list", "List Minecraft servers to crawl") {
     descriptionLocalizations = mutableMapOf(
@@ -37,9 +37,10 @@ suspend fun serverListCommand(guild: Guild) = guild.createChatInputCommand("serv
 fun serverListCommand(kord: Kord) {
     kord.on<GuildChatInputCommandInteractionCreateEvent> {
         val command = interaction.command.takeIf { it.rootName == "server-list" } ?: return@on
-        val response = interaction.deferPublicResponse()
+        val response = interaction.deferEphemeralResponse()
 
-        val pageIndex = command.integers["page"]?.toInt() ?: 0
+        val page = command.integers["page"]?.toInt() ?: 1
+        val pageIndex = page - 1
 
         response.respond {
             createMessage(pageIndex, this)
@@ -64,7 +65,7 @@ private fun createMessage(pageIndex: Int, messageBuilder: MessageBuilder) {
         messageBuilder.content = ":warning: 間違った場所に来てしまったようです"
         messageBuilder.actionRow {
             interactionButton(ButtonStyle.Primary, "server-list-0") {
-                label = "リストの始めに戻る"
+                label = "サーバーリストの始めに戻る"
             }
         }
         return
