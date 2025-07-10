@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app.command
+package net.azisaba.azisababot.app.command.endpoint
 
 import dev.kord.common.Color
 import dev.kord.common.Locale

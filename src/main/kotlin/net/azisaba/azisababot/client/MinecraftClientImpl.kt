@@ -3,7 +3,7 @@ package net.azisaba.azisababot.client
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.azisaba.azisababot.client.packet.*
-import net.azisaba.azisababot.crawler.ServerStatus
+import net.azisaba.azisababot.server.status.ServerStatus
 import net.azisaba.azisababot.server.Server
 import java.io.InputStream
 import java.io.OutputStream

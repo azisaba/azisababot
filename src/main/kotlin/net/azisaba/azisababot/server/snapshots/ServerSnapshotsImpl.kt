@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.server.snapshot
+package net.azisaba.azisababot.server.snapshots
 
 import com.cronutils.model.time.ExecutionTime
 import net.azisaba.azisababot.cronParser
@@ -19,14 +19,14 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-internal class SnapshotsImpl(private val server: Server) : Snapshots {
-    internal val table: SnapshotTable = SnapshotTable(server).also {
+internal class ServerSnapshotsImpl(private val server: Server) : ServerSnapshots {
+    internal val table: ServerSnapshotTable = ServerSnapshotTable(server).also {
         transaction {
             SchemaUtils.create(it)
         }
     }
 
-    override fun plusAssign(snapshot: Snapshot) {
+    override fun plusAssign(snapshot: ServerSnapshot) {
         transaction {
             table.insert {
                 it[timestamp] = snapshot.timestamp
@@ -40,15 +40,15 @@ internal class SnapshotsImpl(private val server: Server) : Snapshots {
         }
     }
 
-    override fun minusAssign(snapshot: Snapshot) {
+    override fun minusAssign(snapshot: ServerSnapshot) {
         transaction {
             table.deleteWhere { table.timestamp eq snapshot.timestamp }
         }
     }
 
-    override fun query(): Snapshots.Query = QueryImpl()
+    override fun query(): ServerSnapshots.Query = QueryImpl()
 
-    private inner class QueryImpl : Snapshots.Query {
+    private inner class QueryImpl : ServerSnapshots.Query {
         private var versionFilter: String? = null
 
         private var minPlayers: Int? = null
@@ -66,23 +66,23 @@ internal class SnapshotsImpl(private val server: Server) : Snapshots {
         private var startTime: Long? = null
         private var endTime: Long? = null
 
-        override fun version(version: String): Snapshots.Query = apply {
+        override fun version(version: String): ServerSnapshots.Query = apply {
             versionFilter = version
         }
 
-        override fun minPlayers(minPlayers: Int): Snapshots.Query = apply {
+        override fun minPlayers(minPlayers: Int): ServerSnapshots.Query = apply {
             this.minPlayers = minPlayers
         }
 
-        override fun maxPlayers(maxPlayers: Int): Snapshots.Query = apply {
+        override fun maxPlayers(maxPlayers: Int): ServerSnapshots.Query = apply {
             this.maxPlayers = maxPlayers
         }
 
-        override fun cron(cronExpression: String): Snapshots.Query = apply {
+        override fun cron(cronExpression: String): ServerSnapshots.Query = apply {
             this.cronExpression = cronExpression
         }
 
-        override fun orderByTimestamp(descending: Boolean): Snapshots.Query = apply {
+        override fun orderByTimestamp(descending: Boolean): ServerSnapshots.Query = apply {
             orderDesc = descending
         }
 
@@ -90,20 +90,20 @@ internal class SnapshotsImpl(private val server: Server) : Snapshots {
             this.limit = limit
         }
 
-        override fun after(timestamp: Long): Snapshots.Query = apply {
+        override fun after(timestamp: Long): ServerSnapshots.Query = apply {
             afterTime = timestamp
         }
 
-        override fun before(timestamp: Long): Snapshots.Query = apply {
+        override fun before(timestamp: Long): ServerSnapshots.Query = apply {
             beforeTime = timestamp
         }
 
-        override fun timeRange(start: Long, end: Long): Snapshots.Query = apply {
+        override fun timeRange(start: Long, end: Long): ServerSnapshots.Query = apply {
             startTime = start
             endTime = end
         }
 
-        override fun execute(): Snapshots.QueryResult = transaction {
+        override fun execute(): ServerSnapshots.QueryResult = transaction {
             val conditions = mutableListOf<Op<Boolean>>()
 
             versionFilter?.let {
@@ -139,7 +139,7 @@ internal class SnapshotsImpl(private val server: Server) : Snapshots {
             val ordered = baseQuery.orderBy(table.timestamp, if (orderDesc) SortOrder.DESC else SortOrder.ASC)
             val limited = limit?.let { ordered.limit(it) } ?: ordered
 
-            val raw = limited.map { Snapshot.snapshot(it, table) }
+            val raw = limited.map { ServerSnapshot.snapshot(it, table) }
 
             val filtered = if (cronExpression != null) {
                 val cron = cronParser.parse(cronExpression)?.also { it.validate() }
@@ -154,7 +154,7 @@ internal class SnapshotsImpl(private val server: Server) : Snapshots {
         }
     }
 
-    private class QueryResultImpl(override val snapshots: List<Snapshot>) : Snapshots.QueryResult {
+    private class QueryResultImpl(override val snapshots: List<ServerSnapshot>) : ServerSnapshots.QueryResult {
         override fun averagePing(): Double? = snapshots.mapNotNull { it.ping }.average().takeIf { !it.isNaN() }
 
         override fun averagePlayers(): Double? = snapshots.mapNotNull { it.status?.onlinePlayers }.average().takeIf { !it.isNaN() }

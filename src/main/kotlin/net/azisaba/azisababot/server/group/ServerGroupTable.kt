@@ -10,4 +10,6 @@ object ServerGroupTable : Table("group") {
     val groupId: Column<String> = varchar("group_id", 16)
 
     val displayName: Column<String> = varchar("display_name", 16)
+
+    override val primaryKey: PrimaryKey = PrimaryKey(uuid)
 }

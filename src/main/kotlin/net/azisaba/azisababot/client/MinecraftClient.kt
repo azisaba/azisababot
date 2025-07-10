@@ -1,6 +1,6 @@
 package net.azisaba.azisababot.client
 
-import net.azisaba.azisababot.crawler.ServerStatus
+import net.azisaba.azisababot.server.status.ServerStatus
 import net.azisaba.azisababot.server.Server
 
 interface MinecraftClient {

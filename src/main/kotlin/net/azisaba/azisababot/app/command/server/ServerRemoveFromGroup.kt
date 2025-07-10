@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app.command
+package net.azisaba.azisababot.app.command.server
 
 import dev.kord.common.Locale
 import dev.kord.core.Kord
@@ -12,36 +12,36 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.group.ServerGroup
 
-suspend fun serverAddToGroupCommand(guild: Guild) = guild.createChatInputCommand("server-add-to-group", "Add a server to the server group") {
+suspend fun serverRemoveFromGroupCommand(guild: Guild) = guild.createChatInputCommand("server-remove-from-group", "Remove a server from the server group") {
     descriptionLocalizations = mutableMapOf(
-        Locale.JAPANESE to "サーバーグループにサーバーを追加します"
+        Locale.JAPANESE to "サーバーグループからサーバーを削除します"
     )
 
-    string("group", "Server group to add server to") {
+    string("group", "Server group to remove server from") {
         required = true
         maxLength = 16
         descriptionLocalizations = mutableMapOf(
-            Locale.JAPANESE to "サーバーを追加するサーバーグループ"
+            Locale.JAPANESE to "サーバーを削除するサーバーグループ"
         )
     }
 
-    string("server", "Server to be added to the server group") {
+    string("server", "Server to be removed from the server group") {
         required = true
         maxLength = 16
         descriptionLocalizations = mutableMapOf(
-            Locale.JAPANESE to "サーバーグループに追加するサーバー"
+            Locale.JAPANESE to "サーバーグループから削除するサーバー"
         )
     }
 }
 
-fun serverAddToGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
-    val command = interaction.command.takeIf { it.rootName == "server-add-to-group" } ?: return@on
+fun serverRemoveFromGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+    val command = interaction.command.takeIf { it.rootName == "server-remove-from-group" } ?: return@on
 
     val groupId = command.strings["group"]!!
     val group = ServerGroup.group(groupId)
     if (group == null) {
         interaction.respondEphemeral {
-            content = ":x: `$groupId` は無効なサーバーグループIDです"
+            content = ":x: $groupId は無効なサーバーグループIDです"
         }
         return@on
     }
@@ -55,15 +55,15 @@ fun serverAddToGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCre
         return@on
     }
 
-    if (server in group) {
+    if (server !in group) {
         interaction.respondEphemeral {
-            content = ":warning: ${server.appNotation()} は既に ${group.appNotation()} に含まれています"
+            content = ":warning: ${server.appNotation()} は既に ${group.appNotation()} に含まれていません"
         }
         return@on
     }
 
-    group += server
+    group -= server
     interaction.respondPublic {
-        content = ":white_check_mark: ${server.appNotation()} を ${group.appNotation()} に追加しました"
+        content = ":white_check_mark: ${server.appNotation()} を ${group.appNotation()} から削除しました"
     }
 }

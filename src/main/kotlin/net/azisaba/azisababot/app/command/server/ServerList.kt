@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app.command
+package net.azisaba.azisababot.app.command.server
 
 import dev.kord.common.Locale
 import dev.kord.common.entity.ButtonStyle

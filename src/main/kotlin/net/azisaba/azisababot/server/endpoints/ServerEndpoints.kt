@@ -2,7 +2,7 @@ package net.azisaba.azisababot.server.endpoints
 
 import net.azisaba.azisababot.server.Server
 
-interface Endpoints : Iterable<Server.Endpoint> {
+interface ServerEndpoints : Iterable<Server.Endpoint> {
     val size: Int
 
     operator fun get(priority: Int): Server.Endpoint

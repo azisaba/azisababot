@@ -40,6 +40,8 @@ interface ServerGroup : Identified, Iterable<Server> {
 
         fun groups(server: Server): Set<ServerGroup> = instances.filter { server in it }.toSet()
 
+        fun all(): ServerGroup = AllServerGroup
+
         internal fun load(row: ResultRow): ServerGroup = ServerGroupImpl(
             uuid = row[ServerGroupTable.uuid],
             groupId = row[ServerGroupTable.groupId],

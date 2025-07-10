@@ -1,11 +1,10 @@
-package net.azisaba.azisababot.app.command
+package net.azisaba.azisababot.app.command.server
 
 import dev.kord.common.Locale
 import dev.kord.core.Kord
 import dev.kord.core.behavior.createChatInputCommand
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.respondPublic
-import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.Guild
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on

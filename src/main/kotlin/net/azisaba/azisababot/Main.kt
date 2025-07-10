@@ -7,7 +7,10 @@ import com.cronutils.parser.CronParser
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import net.azisaba.azisababot.app.app
+import net.azisaba.azisababot.client.MinecraftClient
 import net.azisaba.azisababot.config.Config
+import net.azisaba.azisababot.crawler.schedule.CrawlSchedule
+import net.azisaba.azisababot.crawler.schedule.CrawlScheduleTable
 import net.azisaba.azisababot.server.group.ServerGroupTable
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.ServerTable
@@ -26,8 +29,15 @@ val dataSource: HikariDataSource = dataSource()
 
 val cronParser: CronParser = CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.UNIX))
 
+val minecraft: MinecraftClient = MinecraftClient.client(config.client.protocolVersion, config.client.timeout)
+
 suspend fun main() {
     transaction {
+        SchemaUtils.create(CrawlScheduleTable)
+        CrawlScheduleTable.selectAll().forEach { row ->
+            CrawlSchedule.load(row)
+        }
+
         SchemaUtils.create(ServerTable)
         ServerTable.selectAll().forEach { row ->
             Server.load(row)

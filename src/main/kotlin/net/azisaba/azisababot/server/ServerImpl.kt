@@ -1,9 +1,9 @@
 package net.azisaba.azisababot.server
 
 import net.azisaba.azisababot.server.group.ServerGroup
-import net.azisaba.azisababot.server.snapshot.SnapshotsImpl
-import net.azisaba.azisababot.server.endpoints.EndpointRepositoryImpl
-import net.azisaba.azisababot.server.endpoints.EndpointsImpl
+import net.azisaba.azisababot.server.snapshots.ServerSnapshotsImpl
+import net.azisaba.azisababot.server.endpoints.ServerEndpointRepositoryImpl
+import net.azisaba.azisababot.server.endpoints.ServerEndpointsImpl
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -41,9 +41,9 @@ internal class ServerImpl(
             }
         }
 
-    override val endpoints: EndpointsImpl = EndpointsImpl(EndpointRepositoryImpl(this))
+    override val endpoints: ServerEndpointsImpl = ServerEndpointsImpl(ServerEndpointRepositoryImpl(this))
 
-    override val snapshots: SnapshotsImpl = SnapshotsImpl(this)
+    override val snapshots: ServerSnapshotsImpl = ServerSnapshotsImpl(this)
 
     init {
         Server.instances += this

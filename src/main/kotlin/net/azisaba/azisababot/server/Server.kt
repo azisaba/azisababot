@@ -1,8 +1,8 @@
 package net.azisaba.azisababot.server
 
 import net.azisaba.azisababot.Identified
-import net.azisaba.azisababot.server.snapshot.Snapshots
-import net.azisaba.azisababot.server.endpoints.Endpoints
+import net.azisaba.azisababot.server.snapshots.ServerSnapshots
+import net.azisaba.azisababot.server.endpoints.ServerEndpoints
 import org.jetbrains.exposed.v1.core.ResultRow
 import java.net.InetSocketAddress
 import java.util.*
@@ -12,9 +12,9 @@ interface Server : Identified {
 
     var displayName: String
 
-    val endpoints: Endpoints
+    val endpoints: ServerEndpoints
 
-    val snapshots: Snapshots
+    val snapshots: ServerSnapshots
 
     fun appNotation(): String
 

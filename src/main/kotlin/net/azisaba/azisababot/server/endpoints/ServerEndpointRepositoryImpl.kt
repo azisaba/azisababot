@@ -8,8 +8,8 @@ import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-internal class EndpointRepositoryImpl(private val server: Server) : EndpointRepository {
-    internal val table: EndpointTable = EndpointTable(server).also {
+internal class ServerEndpointRepositoryImpl(private val server: Server) : ServerEndpointRepository {
+    internal val table: ServerEndpointTable = ServerEndpointTable(server).also {
         transaction {
             SchemaUtils.create(it)
         }

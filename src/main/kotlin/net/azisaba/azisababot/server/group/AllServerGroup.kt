@@ -3,7 +3,7 @@ package net.azisaba.azisababot.server.group
 import net.azisaba.azisababot.server.Server
 import java.util.*
 
-object AllServerGroup : ServerGroup {
+internal object AllServerGroup : ServerGroup {
     override val uuid: UUID = UUID.randomUUID()
 
     override var groupId: String = "all"

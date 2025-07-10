@@ -1,9 +1,9 @@
-package net.azisaba.azisababot.server.snapshot
+package net.azisaba.azisababot.server.snapshots
 
-interface Snapshots {
-    operator fun plusAssign(snapshot: Snapshot)
+interface ServerSnapshots {
+    operator fun plusAssign(snapshot: ServerSnapshot)
 
-    operator fun minusAssign(snapshot: Snapshot)
+    operator fun minusAssign(snapshot: ServerSnapshot)
 
     fun query(): Query
 
@@ -30,7 +30,7 @@ interface Snapshots {
     }
 
     interface QueryResult {
-        val snapshots: List<Snapshot>
+        val snapshots: List<ServerSnapshot>
 
         fun averagePing(): Double?
 

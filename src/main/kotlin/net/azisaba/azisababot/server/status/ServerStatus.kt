@@ -1,7 +1,7 @@
-package net.azisaba.azisababot.crawler
+package net.azisaba.azisababot.server.status
 
 import net.azisaba.azisababot.client.packet.ClientboundStatusResponse
-import net.azisaba.azisababot.server.snapshot.SnapshotTable
+import net.azisaba.azisababot.server.snapshots.ServerSnapshotTable
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.jetbrains.exposed.v1.core.ResultRow
@@ -32,7 +32,7 @@ sealed interface ServerStatus {
             jsonResponse.description
         )
 
-        internal fun status(row: ResultRow, table: SnapshotTable): ServerStatus? {
+        internal fun status(row: ResultRow, table: ServerSnapshotTable): ServerStatus? {
             val version = row[table.version] ?: return null
             val protocol = row[table.protocol] ?: return null
             val onlinePlayers = row[table.onlinePlayers] ?: return null

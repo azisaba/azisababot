@@ -2,7 +2,7 @@ package net.azisaba.azisababot.server.endpoints
 
 import net.azisaba.azisababot.server.Server
 
-internal class EndpointsImpl(internal val repository: EndpointRepositoryImpl) : Endpoints {
+internal class ServerEndpointsImpl(internal val repository: ServerEndpointRepositoryImpl) : ServerEndpoints {
     override val size: Int
         get() = repository.count()
 

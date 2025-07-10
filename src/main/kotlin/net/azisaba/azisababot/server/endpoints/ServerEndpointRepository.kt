@@ -2,7 +2,7 @@ package net.azisaba.azisababot.server.endpoints
 
 import net.azisaba.azisababot.server.Server
 
-internal interface EndpointRepository {
+internal interface ServerEndpointRepository {
     fun select(priority: Int): Server.Endpoint?
 
     fun selectAll(): List<Server.Endpoint>
