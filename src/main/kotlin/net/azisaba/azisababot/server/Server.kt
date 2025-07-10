@@ -31,7 +31,7 @@ interface Server {
 
         fun server(block: Builder.() -> Unit): Server = ServerImpl.BuilderImpl().apply(block).build()
 
-        fun servers(): Set<Server> = instances.toSet()
+        fun servers(): Set<Server> = instances.sortedBy { it.serverId }.toSet()
 
         internal fun load(row: ResultRow): Server = ServerImpl(
             uuid = row[ServerTable.uuid],

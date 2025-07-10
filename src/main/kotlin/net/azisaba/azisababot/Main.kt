@@ -6,6 +6,7 @@ import com.cronutils.model.definition.CronDefinitionBuilder
 import com.cronutils.parser.CronParser
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import net.azisaba.azisababot.app.app
 import net.azisaba.azisababot.config.Config
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.ServerTable
@@ -23,13 +24,15 @@ val dataSource: HikariDataSource = dataSource()
 
 val cronParser: CronParser = CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.UNIX))
 
-fun main() {
+suspend fun main() {
     transaction {
         SchemaUtils.create(ServerTable)
         ServerTable.selectAll().forEach { row ->
             Server.load(row)
         }
     }
+
+    app()
 
     dataSource.close()
 }
