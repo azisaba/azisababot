@@ -9,7 +9,7 @@ import java.util.*
 interface Server {
     val uuid: UUID
 
-    val serverId: String
+    var serverId: String
 
     var displayName: String
 

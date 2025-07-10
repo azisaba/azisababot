@@ -14,6 +14,7 @@ suspend fun app() {
             endpointRemoveCommand(guild)
 
             serverAddCommand(guild)
+            serverEditCommand(guild)
             serverListCommand(guild)
             serverRemoveCommand(guild)
         }
@@ -24,6 +25,7 @@ suspend fun app() {
         endpointRemoveCommand(kord)
 
         serverAddCommand(kord)
+        serverEditCommand(kord)
         serverListCommand(kord)
         serverRemoveCommand(kord)
     }

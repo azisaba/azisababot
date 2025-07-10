@@ -11,15 +11,30 @@ import java.util.*
 
 internal class ServerImpl(
     override val uuid: UUID,
-    override var serverId: String,
+    serverId: String,
     displayName: String
 ) : Server {
-    override var displayName: String = displayName
+    override var serverId: String = serverId
         set(value) {
-            require(Server.DISPLAY_NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}" }
+            require(Server.SERVER_ID_REGEX.matches(value)) { "Invalid server ID: must match the pattern ${Server.SERVER_ID_REGEX.pattern}" }
             field = value
             transaction {
-                ServerTable.update({ ServerTable.serverId eq id }) {
+                if (ServerTable.selectAll().where { ServerTable.serverId eq value }.any()) {
+                    throw IllegalStateException("This server ID is already in use")
+                }
+
+                ServerTable.update({ ServerTable.uuid eq uuid }) {
+                    it[serverId] = value
+                }
+            }
+        }
+
+    override var displayName: String = displayName
+        set(value) {
+            require(Server.DISPLAY_NAME_REGEX.matches(value)) { "Invalid display name: must match the pattern ${Server.DISPLAY_NAME_REGEX.pattern}" }
+            field = value
+            transaction {
+                ServerTable.update({ ServerTable.uuid eq uuid }) {
                     it[displayName] = value
                 }
             }
