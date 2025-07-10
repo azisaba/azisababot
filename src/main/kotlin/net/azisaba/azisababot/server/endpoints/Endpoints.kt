@@ -7,6 +7,8 @@ interface Endpoints : Iterable<Server.Endpoint> {
 
     operator fun get(priority: Int): Server.Endpoint
 
+    operator fun set(priority: Int, endpoint: Server.Endpoint)
+
     operator fun plusAssign(endpoint: Server.Endpoint)
 
     operator fun plusAssign(endpoints: Iterable<Server.Endpoint>)

@@ -9,6 +9,10 @@ internal class EndpointsImpl(internal val repository: EndpointRepositoryImpl) : 
     override fun get(priority: Int): Server.Endpoint = repository.select(priority)
         ?: throw IndexOutOfBoundsException("No endpoint at priority $priority")
 
+    override fun set(priority: Int, endpoint: Server.Endpoint) {
+        insertAt(endpoint, priority)
+    }
+
     override fun plusAssign(endpoint: Server.Endpoint) {
         add(endpoint)
     }
