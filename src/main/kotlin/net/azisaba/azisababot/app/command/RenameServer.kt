@@ -12,30 +12,37 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-remove-server"
+private const val COMMAND_NAME: String = "abm-rename-server"
 
-suspend fun abmRemoveServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Remove a server from to crawling") {
+suspend fun abmRenameServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Rename a server") {
     descriptionLocalizations = mutableMapOf(
-        Locale.JAPANESE to "サーバーをクロールの対象から削除します"
+        Locale.JAPANESE to "サーバーの名前を変更します"
     )
 
-    string("server", "Server to be removed") {
+    string("server", "Server to rename") {
         required = true
         descriptionLocalizations = mutableMapOf(
-            Locale.JAPANESE to "削除するサーバー"
+            Locale.JAPANESE to  "名前を変更するサーバー"
         )
         for (server in Server.servers()) {
-            choice(server.name ?: server.id, server.id)
+            choice(server.nameOrId, server.id)
         }
+    }
+
+    string("new-name", "New name") {
+        required = false
+        maxLength = 16
+        descriptionLocalizations = mutableMapOf(
+            Locale.JAPANESE to "新しい名前"
+        )
     }
 }
 
-fun abmRemoveServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abmRenameServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val serverId = command.strings["server"]!!
     val server = Server.server(serverId)
-
     if (server == null) {
         interaction.respondEphemeral {
             content = i18n("command.errors.server_not_found", serverId)
@@ -45,14 +52,16 @@ fun abmRemoveServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCrea
 
     val response = interaction.deferPublicResponse()
 
+    val newName = command.strings["new-name"]
+
     try {
-        server.remove()
+        server.name = newName
         response.respond {
-            content = i18n("command.abm_remove_server.success", server.toAppName())
+            content = i18n("command.abm_rename_server.success", server.toAppName(), newName)
         }
     } catch (e: Exception) {
         response.respond {
-            content = i18n("command.abm_remove_server.failure", e.message)
+            content = i18n("command.abm_rename_server.failure", e.message)
         }
     }
 }

@@ -19,13 +19,15 @@ import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 import java.util.*
 
+private const val COMMAND_NAME: String = "abm-server-list"
+
 private const val SERVER_PER_PAGE: Int = 10
 
 private val buttonRegex: Regex = Regex("""server-list-(${ServerGroup.ID_REGEX.pattern})-(\d+)""")
 
 private val dummyGroupId: String = UUID.randomUUID().toString().replace('-', '_')
 
-suspend fun abmServerListCommand(guild: Guild) = guild.createChatInputCommand("abm-server-list", "List the servers") {
+suspend fun abmServerListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the servers") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーをリスト表示します"
     )
@@ -51,7 +53,7 @@ suspend fun abmServerListCommand(guild: Guild) = guild.createChatInputCommand("a
 
 fun abmServerListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
-        val command = interaction.command.takeIf { it.rootName == "abm-server-list" } ?: return@on
+        val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()
 
         val page = command.integers["page"]?.toInt() ?: 0
@@ -104,12 +106,12 @@ private fun buildPage(page: Int, group: ServerGroup?, builder: MessageBuilder) {
     for (server in servers[page]) {
         stringBuilder.append('\n')
         stringBuilder.append("- ")
-        stringBuilder.append(i18n("command.abm_server_list.list.server", server.toAppName(), server.toList().size))
+        stringBuilder.append(i18n("command.abm_server_list.list.element", server.toAppName(), server.toList().size))
     }
 
     stringBuilder.append('\n')
     stringBuilder.append("-# ")
-    stringBuilder.append(i18n("command.abm_server_list.list.total", servers.flatten().size))
+    stringBuilder.append(i18n("command.abm_server_list.list.footer", servers.flatten().size))
 
     builder.content = stringBuilder.toString()
 

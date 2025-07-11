@@ -14,16 +14,27 @@ lateinit var kord: Kord
 private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
 suspend fun app() {
+    logger.info("Starting bot...")
+
     kord = Kord(System.getenv(config.app.tokenEnv))
     kord.login {
         kord.guilds.collect { guild ->
             abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
 
+            abmAddServerToGroupCommand(guild)
+
+            abmCreateGroupCommand(guild)
+            abmDeleteGroupCommand(guild)
+
             abmEndpointListCommand(guild)
+
+            abmGroupListCommand(guild)
 
             abmRemoveEndpointCommand(guild)
             abmRemoveServerCommand(guild)
+
+            abmRemoveServerFromGroupCommand(guild)
 
             abmServerListCommand(guild)
         }
@@ -31,10 +42,19 @@ suspend fun app() {
         abmAddEndpointCommand(kord)
         abmAddServerCommand(kord)
 
+        abmAddServerToGroupCommand(kord)
+
+        abmCreateGroupCommand(kord)
+        abmDeleteGroupCommand(kord)
+
         abmEndpointListCommand(kord)
+
+        abmGroupListCommand(kord)
 
         abmRemoveEndpointCommand(kord)
         abmRemoveServerCommand(kord)
+
+        abmRemoveServerFromGroupCommand(kord)
 
         abmServerListCommand(kord)
 
@@ -47,6 +67,7 @@ fun updateServerCommands() {
         kord.guilds.collect { guild ->
             abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
+            abmAddServerToGroupCommand(guild)
             abmEndpointListCommand(guild)
             abmEndpointListCommand(guild)
             abmRemoveServerCommand(guild)
@@ -57,6 +78,9 @@ fun updateServerCommands() {
 fun updateServerGroupCommands() {
     coroutineScope.launch {
         kord.guilds.collect { guild ->
+            abmAddServerToGroupCommand(guild)
+            abmDeleteGroupCommand(guild)
+            abmRemoveServerFromGroupCommand(guild)
             abmServerListCommand(guild)
         }
     }

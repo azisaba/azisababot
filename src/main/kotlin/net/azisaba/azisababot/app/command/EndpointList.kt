@@ -15,11 +15,13 @@ import dev.kord.rest.builder.message.actionRow
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
+private const val COMMAND_NAME: String = "abm-endpoint0list"
+
 private const val ENDPOINT_PER_PAGE: Int = 10
 
 private val buttonRegex: Regex = Regex(""""endpoint-list-(${Server.ID_REGEX.pattern})-(\d+)"""")
 
-suspend fun abmEndpointListCommand(guild: Guild) = guild.createChatInputCommand("abm-endpoint-list", "List the endpoints of a server") {
+suspend fun abmEndpointListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the endpoints of a server") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーのエンドポイントをリスト表示します"
     )
@@ -44,7 +46,7 @@ suspend fun abmEndpointListCommand(guild: Guild) = guild.createChatInputCommand(
 
 fun abmEndpointListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
-        val command = interaction.command.takeIf { it.rootName == "abm-endpoint-list" } ?: return@on
+        val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()
 
         val serverId = command.strings["server"]!!
@@ -87,12 +89,12 @@ private fun buildPage(page: Int, server: Server, builder: MessageBuilder) {
     for ((priority, endpoint) in endpoints[page]) {
         stringBuilder.append('\n')
         stringBuilder.append("- ")
-        stringBuilder.append(i18n("command.abm_endpoint_list.list.endpoint", endpoint, priority))
+        stringBuilder.append(i18n("command.abm_endpoint_list.list.element", endpoint, priority))
     }
 
     stringBuilder.append('\n')
     stringBuilder.append("-# ")
-    stringBuilder.append(i18n("command.abm_endpoint_list.list.total", endpoints.flatten().size))
+    stringBuilder.append(i18n("command.abm_endpoint_list.list.footer", endpoints.flatten().size))
 
     builder.content = stringBuilder.toString()
 

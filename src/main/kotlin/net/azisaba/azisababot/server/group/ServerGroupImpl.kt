@@ -1,5 +1,6 @@
 package net.azisaba.azisababot.server.group
 
+import net.azisaba.azisababot.app.updateServerGroupCommands
 import net.azisaba.azisababot.server.Server
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.*
@@ -77,6 +78,9 @@ internal class ServerGroupImpl(
 
     override fun remove() {
         ServerGroup.instances -= this
+
+        updateServerGroupCommands()
+
         transaction {
             ServerGroupTable.deleteWhere { id eq this@ServerGroupImpl.id }
             SchemaUtils.drop(table)
@@ -112,7 +116,9 @@ internal class ServerGroupImpl(
                 }
             }
 
-            return ServerGroupImpl(id!!, name)
+            return ServerGroupImpl(id!!, name).also {
+                updateServerGroupCommands()
+            }
         }
     }
 }
