@@ -10,3 +10,5 @@ database:
   usernameEnv: DATABASE_USERNAME
   passwordEnv: DATABASE_PASSWORD
   maxPoolSize: 10
+
+locale: ja-JP

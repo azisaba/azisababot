@@ -19,11 +19,18 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.ResourceBundle
 
 val config: Config = config()
+
+val bundle: ResourceBundle = ResourceBundle.getBundle("Bundle", config.locale)
+
+val logger: Logger = LoggerFactory.getLogger("Azisababot")
 
 val dataSource: HikariDataSource = dataSource()
 

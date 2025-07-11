@@ -1,5 +1,6 @@
 package net.azisaba.azisababot.server
 
+import net.azisaba.azisababot.app.updateServerCommands
 import net.azisaba.azisababot.crawler.snapshot.Snapshots
 import net.azisaba.azisababot.server.group.ServerGroup
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
@@ -71,6 +72,8 @@ internal class ServerImpl(
     override fun remove() {
         Server.instances -= this
 
+        updateServerCommands()
+
         Snapshots.of(this).drop()
 
         ServerGroup.groups(this).forEach { group ->
@@ -81,6 +84,8 @@ internal class ServerImpl(
             SchemaUtils.drop(endpointTable)
         }
     }
+
+    override fun toAppName(): String = if (name != null) "$name (`$id`)" else id
 
     internal data class EndpointImpl(
         override val host: String,
@@ -118,7 +123,9 @@ internal class ServerImpl(
                 }
             }
 
-            return ServerImpl(id!!, name)
+            return ServerImpl(id!!, name).also {
+                updateServerCommands()
+            }
         }
     }
 }

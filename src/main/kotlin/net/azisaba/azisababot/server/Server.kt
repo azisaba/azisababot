@@ -2,10 +2,11 @@ package net.azisaba.azisababot.server
 
 import net.azisaba.azisababot.Identified
 import net.azisaba.azisababot.Nameable
+import net.azisaba.azisababot.app.AppFriendly
 import org.jetbrains.exposed.v1.core.ResultRow
 import java.net.InetSocketAddress
 
-interface Server : Identified, Iterable<Pair<Int, Server.Endpoint>>, Nameable {
+interface Server : AppFriendly, Identified, Iterable<Pair<Int, Server.Endpoint>>, Nameable {
     operator fun get(key: Endpoint): Int?
 
     operator fun set(key: Endpoint, value: Int?)

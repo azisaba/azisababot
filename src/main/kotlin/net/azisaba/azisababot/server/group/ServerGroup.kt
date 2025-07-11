@@ -2,10 +2,11 @@ package net.azisaba.azisababot.server.group
 
 import net.azisaba.azisababot.Identified
 import net.azisaba.azisababot.Nameable
+import net.azisaba.azisababot.app.AppFriendly
 import net.azisaba.azisababot.server.Server
 import org.jetbrains.exposed.v1.core.ResultRow
 
-interface ServerGroup : Identified, Iterable<Server>, Nameable {
+interface ServerGroup : AppFriendly, Identified, Iterable<Server>, Nameable {
     val size: Int
 
     operator fun plusAssign(server: Server)

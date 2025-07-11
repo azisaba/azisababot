@@ -80,6 +80,8 @@ internal class ServerGroupImpl(
         }
     }
 
+    override fun toAppName(): String = if (name != null) "$name (`$id`)" else id
+
     internal class BuilderImpl : ServerGroup.Builder {
         override var id: String? = null
 
