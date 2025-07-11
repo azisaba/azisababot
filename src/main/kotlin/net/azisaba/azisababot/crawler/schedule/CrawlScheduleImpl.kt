@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import net.azisaba.azisababot.crawler.crawl
+import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.group.ServerGroup
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
@@ -21,15 +22,15 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 internal data class CrawlScheduleImpl(
-    override val name: String,
+    override val id: String,
     override val cron: Cron,
-    override val group: ServerGroup
+    override val target: ServerGroup?
 ) : CrawlSchedule {
     private val executionTime: ExecutionTime = ExecutionTime.forCron(cron)
 
     private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 
-    private var future: ScheduledFuture<*>? = null
+    private var scheduledFuture: ScheduledFuture<*>? = null
 
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -38,10 +39,8 @@ internal data class CrawlScheduleImpl(
         scheduleNext()
     }
 
-    override fun appNotation(): String = "$name (`${cron.asString()}`)"
-
-    override fun remove() {
-        future?.cancel(true)
+    override fun cancel() {
+        scheduledFuture?.cancel(true)
         scheduler.shutdownNow()
         CrawlSchedule.instances -= this
         transaction {
@@ -63,7 +62,7 @@ internal data class CrawlScheduleImpl(
 
         val delay = Duration.between(now, nextExecution).toMillis()
 
-        future = scheduler.schedule({
+        scheduledFuture = scheduler.schedule({
             runTask()
             scheduleNext()
         }, delay, TimeUnit.MILLISECONDS)
@@ -71,7 +70,7 @@ internal data class CrawlScheduleImpl(
 
     private fun runTask() {
         coroutineScope.launch {
-            for (server in group) {
+            for (server in target ?: Server.servers()) {
                 crawl(server, timestamp(), true)
             }
         }
@@ -90,17 +89,18 @@ internal data class CrawlScheduleImpl(
             check(CrawlSchedule.NAME_PATTERN.matches(name!!)) { "Invalid name: must match the pattern ${CrawlSchedule.NAME_PATTERN.pattern}" }
 
             transaction {
-                check(CrawlScheduleTable.selectAll().where { CrawlScheduleTable.name eq this@BuilderImpl.name!! }.none()) {
+                check(CrawlScheduleTable.selectAll().where { CrawlScheduleTable.id eq this@BuilderImpl.name!! }.none()) {
                     "Name is already in use: ${this@BuilderImpl.name}"
                 }
 
                 CrawlScheduleTable.insert {
-                    it[name] = this@BuilderImpl.name!!
+                    it[id] = this@BuilderImpl.name!!
                     it[cron] = this@BuilderImpl.cron!!.asString()
-                    it[group] = this@BuilderImpl.group?.uuid
+                    it[target] = this@BuilderImpl.group?.id
                 }
             }
-            return CrawlScheduleImpl(name!!, cron!!, group ?: ServerGroup.all())
+
+            return CrawlScheduleImpl(name!!, cron!!, group)
         }
     }
 }

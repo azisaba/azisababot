@@ -2,14 +2,11 @@ package net.azisaba.azisababot.server
 
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table
-import java.util.UUID
 
 object ServerTable : Table("server") {
-    val uuid: Column<UUID> = uuid("uuid")
+    val id: Column<String> = varchar("id", 16)
 
-    val serverId: Column<String> = varchar("server_id", 16).uniqueIndex()
+    val name: Column<String?> = varchar("name", 16).nullable()
 
-    val displayName: Column<String> = varchar("display_name", 16)
-
-    override val primaryKey: PrimaryKey = PrimaryKey(uuid)
+    override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

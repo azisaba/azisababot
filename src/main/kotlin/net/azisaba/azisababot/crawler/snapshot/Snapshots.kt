@@ -1,11 +1,27 @@
-package net.azisaba.azisababot.server.snapshots
+package net.azisaba.azisababot.crawler.snapshot
 
-interface ServerSnapshots {
-    operator fun plusAssign(snapshot: ServerSnapshot)
+import net.azisaba.azisababot.server.Server
 
-    operator fun minusAssign(snapshot: ServerSnapshot)
+interface Snapshots {
+    val size: Long
+
+    val server: Server
+
+    operator fun plusAssign(snapshot: Snapshot)
+
+    operator fun minusAssign(snapshot: Snapshot)
 
     fun query(): Query
+
+    fun clear()
+
+    fun drop()
+
+    companion object {
+        internal val instances: MutableMap<Server, Snapshots> = mutableMapOf()
+
+        fun of(server: Server): Snapshots = instances[server] ?: SnapshotsImpl(server)
+    }
 
     interface Query {
         fun version(version: String): Query
@@ -29,9 +45,7 @@ interface ServerSnapshots {
         fun execute(): QueryResult
     }
 
-    interface QueryResult {
-        val snapshots: List<ServerSnapshot>
-
+    interface QueryResult : Iterable<Snapshot> {
         fun averagePing(): Double?
 
         fun averagePlayers(): Double?

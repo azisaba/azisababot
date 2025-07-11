@@ -1,36 +1,33 @@
 package net.azisaba.azisababot.crawler.schedule
 
 import com.cronutils.model.Cron
+import net.azisaba.azisababot.Identified
 import net.azisaba.azisababot.cronParser
 import net.azisaba.azisababot.server.group.ServerGroup
 import org.jetbrains.exposed.v1.core.ResultRow
 
-interface CrawlSchedule {
-    val name: String
-
+interface CrawlSchedule : Identified {
     val cron: Cron
 
-    val group: ServerGroup
+    val target: ServerGroup?
 
-    fun appNotation(): String
-
-    fun remove()
+    fun cancel()
 
     companion object {
         val NAME_PATTERN: Regex = Regex("^[a-z0-9_]{1,16}$")
 
         internal val instances: MutableSet<CrawlSchedule> = mutableSetOf()
 
-        fun schedule(name: String): CrawlSchedule? = instances.find { it.name == name }
+        fun schedule(id: String): CrawlSchedule? = instances.find { it.id == id }
 
         fun schedule(block: Builder.() -> Unit): CrawlSchedule = CrawlScheduleImpl.BuilderImpl().apply(block).build()
 
-        fun schedules(): Set<CrawlSchedule> = instances.toSet()
+        fun schedules(): Set<CrawlSchedule> = instances.sortedBy { it.id }.toSet()
 
         internal fun load(row: ResultRow): CrawlSchedule = CrawlScheduleImpl(
-            name = row[CrawlScheduleTable.name],
-            cron = cronParser.parse(row[CrawlScheduleTable.cron]),
-            group = row[CrawlScheduleTable.group]?.let { ServerGroup.group(it) } ?: ServerGroup.all()
+            id = row[CrawlScheduleTable.id],
+            cron = row[CrawlScheduleTable.cron].let { cronParser.parse(it) },
+            target = row[CrawlScheduleTable.target]?.let { ServerGroup.group(it) }
         )
     }
 

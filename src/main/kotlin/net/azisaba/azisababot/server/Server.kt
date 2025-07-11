@@ -1,43 +1,36 @@
 package net.azisaba.azisababot.server
 
 import net.azisaba.azisababot.Identified
-import net.azisaba.azisababot.server.snapshots.ServerSnapshots
-import net.azisaba.azisababot.server.endpoints.ServerEndpoints
+import net.azisaba.azisababot.Nameable
 import org.jetbrains.exposed.v1.core.ResultRow
 import java.net.InetSocketAddress
-import java.util.*
 
-interface Server : Identified {
-    var serverId: String
+interface Server : Identified, Iterable<Pair<Int, Server.Endpoint>>, Nameable {
+    operator fun get(key: Endpoint): Int?
 
-    var displayName: String
+    operator fun set(key: Endpoint, value: Int?)
 
-    val endpoints: ServerEndpoints
+    operator fun contains(endpoint: Endpoint): Boolean
 
-    val snapshots: ServerSnapshots
-
-    fun appNotation(): String
+    fun clear()
 
     fun remove()
 
     companion object {
-        val SERVER_ID_REGEX: Regex = Regex("^[a-z0-9_]{1,16}$")
-        val DISPLAY_NAME_REGEX: Regex = Regex("^.{0,16}$")
+        val ID_REGEX: Regex = Regex("^[a-z0-9_]{1,16}$")
+        val NAME_REGEX: Regex = Regex("^.{0,16}$")
 
         internal val instances: MutableSet<Server> = mutableSetOf()
 
-        fun server(uuid: UUID): Server? = instances.find { it.uuid == uuid }
-
-        fun server(serverId: String): Server? = instances.find { it.serverId == serverId }
+        fun server(id: String): Server? = instances.find { it.id == id }
 
         fun server(block: Builder.() -> Unit): Server = ServerImpl.BuilderImpl().apply(block).build()
 
-        fun servers(): Set<Server> = instances.sortedBy { it.serverId }.toSet()
+        fun servers(): Set<Server> = instances.sortedBy { it.id }.toSet()
 
         internal fun load(row: ResultRow): Server = ServerImpl(
-            uuid = row[ServerTable.uuid],
-            serverId = row[ServerTable.serverId],
-            displayName = row[ServerTable.displayName]
+            id = row[ServerTable.id],
+            name = row[ServerTable.name]
         )
     }
 
@@ -55,11 +48,9 @@ interface Server : Identified {
 
     @ServerDsl
     interface Builder {
-        var uuid: UUID
+        var id: String?
 
-        var serverId: String?
-
-        var displayName: String?
+        var name: String?
 
         fun build(): Server
     }

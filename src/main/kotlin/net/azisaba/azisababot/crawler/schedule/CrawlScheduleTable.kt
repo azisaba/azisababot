@@ -1,16 +1,15 @@
 package net.azisaba.azisababot.crawler.schedule
 
-import net.azisaba.azisababot.server.group.ServerGroupTable
+import net.azisaba.azisababot.server.ServerTable
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table
-import java.util.*
 
-object CrawlScheduleTable : Table("schedule") {
-    val name: Column<String> = varchar("name", 16)
+object CrawlScheduleTable : Table("crawl_schedule") {
+    val id: Column<String> = varchar("id", 16)
 
     val cron: Column<String> = varchar("cron", 86)
 
-    val group: Column<UUID?> = uuid("group").references(ServerGroupTable.uuid).nullable()
+    val target: Column<String?> = varchar("target", 16).references(ServerTable.id).nullable()
 
-    override val primaryKey: PrimaryKey = PrimaryKey(name)
+    override val primaryKey: PrimaryKey = PrimaryKey(id)
 }

@@ -1,49 +1,33 @@
 package net.azisaba.azisababot.server.group
 
 import net.azisaba.azisababot.server.Server
-import net.azisaba.azisababot.server.ServerTable
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import java.util.*
 
 internal class ServerGroupImpl(
-    override val uuid: UUID,
-    groupId: String,
-    displayName: String
+    override val id: String,
+    name: String?
 ) : ServerGroup {
-    override var groupId: String = groupId
+    override var name: String? = name
         set(value) {
-            require(ServerGroup.GROUP_ID_REGEX.matches(value)) { "Invalid group ID: must match the pattern ${ServerGroup.GROUP_ID_REGEX.pattern}" }
-            field = value
-            transaction {
-                if (ServerGroupTable.selectAll().where { ServerGroupTable.groupId eq value }.any()) {
-                    throw IllegalStateException("This group ID is already in use")
-                }
-
-                memberTable.update({ ServerGroupTable.uuid eq uuid }) {
-                    it[ServerGroupTable.groupId] = value
-                }
+            require(value == null || ServerGroup.NAME_REGEX.matches(value)) {
+                "Invalid name: must match the pattern ${ServerGroup.NAME_REGEX.pattern}"
             }
-        }
-
-    override var displayName: String = displayName
-        set(value) {
-            require(ServerGroup.DISPLAY_NAME_REGEX.matches(value)) { "Invalid display name: must match the pattern ${ServerGroup.DISPLAY_NAME_REGEX}" }
             field = value
             transaction {
-                ServerTable.update({ ServerGroupTable.uuid eq uuid }) {
-                    it[displayName] = value
+                table.update({ ServerGroupTable.id eq id }) {
+                    it[ServerGroupTable.name] = value
                 }
             }
         }
 
     override val size: Int
-        get() = members.size
+        get() = servers.size
 
-    private val members: MutableSet<Server> = mutableSetOf()
+    private val servers: MutableSet<Server> = mutableSetOf()
 
-    private val memberTable: ServerGroupMemberTable = ServerGroupMemberTable(this).also {
+    private val table: ServerGroupServerTable = ServerGroupServerTable(this).also {
         transaction {
             SchemaUtils.create(it)
         }
@@ -52,89 +36,78 @@ internal class ServerGroupImpl(
     init {
         ServerGroup.instances += this
         transaction {
-            memberTable.selectAll().forEach { row ->
-                val uuid = row[memberTable.uuid]
-                members += Server.server(uuid)!!
+            table.selectAll().forEach { row ->
+                val serverId = row[table.server]
+                servers += Server.server(serverId)!!
             }
         }
     }
 
     override fun plusAssign(server: Server) {
-        require(server !in members) { "This server is already a member of the group" }
-        members += server
+        require(server !in servers) { "The server is already in the server group" }
+        servers += server
         transaction {
-            memberTable.insert {
-                it[uuid] = server.uuid
+            table.insert {
+                it[this.server] = server.id
             }
         }
     }
 
     override fun minusAssign(server: Server) {
-        require(server in members) { "This server is not a member of the group" }
-        members -= server
+        require(server in servers) { "The server is not already part of the server group" }
+        servers -= server
         transaction {
-            memberTable.deleteWhere { uuid eq server.uuid }
+            table.deleteWhere { table.server eq server.id }
         }
     }
 
-    override fun contains(server: Server): Boolean = server in members
+    override fun contains(server: Server): Boolean = server in servers
 
-    override fun iterator(): Iterator<Server> = members.iterator()
-
-    override fun appNotation(): String = "$displayName (`$groupId`)"
+    override fun iterator(): Iterator<Server> = servers.iterator()
 
     override fun clear() {
-        ServerGroup.instances -= this
+        servers.clear()
         transaction {
-            ServerGroupTable.deleteWhere { uuid eq this@ServerGroupImpl.uuid }
-            SchemaUtils.drop(memberTable)
+            table.deleteAll()
         }
     }
 
     override fun remove() {
         ServerGroup.instances -= this
         transaction {
-            ServerGroupTable.deleteWhere { uuid eq this@ServerGroupImpl.uuid }
-            SchemaUtils.drop(memberTable)
+            ServerGroupTable.deleteWhere { id eq this@ServerGroupImpl.id }
+            SchemaUtils.drop(table)
         }
     }
 
     internal class BuilderImpl : ServerGroup.Builder {
-        override var uuid: UUID = UUID.randomUUID()
+        override var id: String? = null
 
-        override var groupId: String? = null
-
-        override var displayName: String? = null
+        override var name: String? = null
 
         override fun build(): ServerGroup {
-            checkNotNull(groupId) { "Group ID not set" }
-            checkNotNull(displayName) { "Display name not set" }
+            checkNotNull(id) { "ID not set" }
 
-            check(ServerGroup.GROUP_ID_REGEX.matches(groupId!!)) {
-                "Invalid group ID: must match the pattern ${ServerGroup.GROUP_ID_REGEX.pattern}"
+            check(ServerGroup.ID_REGEX.matches(id!!)) {
+                "Invalid ID: must match the pattern ${ServerGroup.ID_REGEX.pattern}"
             }
 
-            check(ServerGroup.DISPLAY_NAME_REGEX.matches(displayName!!)) {
-                "Invalid display name: must match the pattern ${ServerGroup.DISPLAY_NAME_REGEX.pattern}"
+            check(name == null || ServerGroup.NAME_REGEX.matches(name!!)) {
+                "Invalid name: must match the pattern ${ServerGroup.NAME_REGEX.pattern}"
             }
 
             transaction {
-                check(ServerGroupTable.selectAll().where { ServerGroupTable.uuid eq uuid }.none()) {
-                    "UUID is already in use: $uuid"
-                }
-
-                check(ServerGroupTable.selectAll().where { ServerGroupTable.groupId eq groupId!! }.none()) {
-                    "Group ID is already in use: $groupId"
+                check(ServerGroupTable.selectAll().where { ServerGroupTable.id eq this@BuilderImpl.id!! }.none()) {
+                    "ID is already in use: ${this@BuilderImpl.id}"
                 }
 
                 ServerGroupTable.insert {
-                    it[uuid] = this@BuilderImpl.uuid
-                    it[groupId] = this@BuilderImpl.groupId!!
-                    it[displayName] = this@BuilderImpl.displayName!!
+                    it[id] = this@BuilderImpl.id!!
+                    it[name] = this@BuilderImpl.name
                 }
             }
 
-            return ServerGroupImpl(uuid, groupId!!, displayName!!)
+            return ServerGroupImpl(id!!, name)
         }
     }
 }

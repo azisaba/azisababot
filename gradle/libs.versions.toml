@@ -4,11 +4,12 @@ cronutils = "9.2.1"
 exposed = "1.0.0-beta-4"
 hikari = "6.3.0"
 kaml = "0.73.0"
-kandy = "0.8.0"
 kord = "0.15.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.2"
+kotlinx-kandy = "0.8.0"
 kotlinx-serialization = "1.9.0"
+kotlinx-stastics = "0.4.0"
 logback = "1.5.18"
 mariadb = "3.5.4"
 
@@ -20,9 +21,9 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 hikari-cp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
-kandy = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandy" }
 kord = { module = "dev.kord:kord-core", version.ref = "kord" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-kandy = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kotlinx-kandy" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 mariadb-jdbc = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }

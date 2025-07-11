@@ -1,18 +1,22 @@
 package net.azisaba.azisababot.client
 
-import net.azisaba.azisababot.server.status.ServerStatus
+import net.azisaba.azisababot.config
+import net.azisaba.azisababot.server.ServerStatus
 import net.azisaba.azisababot.server.Server
 
 interface MinecraftClient {
     val protocolVersion: Int
 
-    var timeout: Int
+    val timeout: Int
 
-    suspend fun fetchServerStatus(endpoint: Server.Endpoint): ServerStatus?
+    suspend fun serverStatus(endpoint: Server.Endpoint): ServerStatus?
 
-    suspend fun fetchPing(endpoint: Server.Endpoint): Long?
+    suspend fun ping(endpoint: Server.Endpoint): Long?
 
     companion object {
-        fun client(protocolVersion: Int = 772, timeout: Int = 7000): MinecraftClient = MinecraftClientImpl(protocolVersion, timeout)
+        fun client(
+            protocolVersion: Int = config.client.protocolVersion,
+            timeout: Int = config.client.timeout
+        ): MinecraftClient = MinecraftClientImpl(protocolVersion, timeout)
     }
 }

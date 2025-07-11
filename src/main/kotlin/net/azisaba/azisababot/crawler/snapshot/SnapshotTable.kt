@@ -1,10 +1,10 @@
-package net.azisaba.azisababot.server.snapshots
+package net.azisaba.azisababot.crawler.snapshot
 
 import net.azisaba.azisababot.server.Server
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Table
 
-class ServerSnapshotTable(server: Server) : Table("snapshot_${server.uuid.toString().replace('-', '_')}") {
+class SnapshotTable(server: Server) : Table("snapshot_${server.id}") {
     val timestamp: Column<Long> = long("timestamp").index()
 
     val version: Column<String?> = varchar("version", 32).nullable()
