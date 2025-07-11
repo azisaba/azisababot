@@ -7,6 +7,8 @@ import org.jetbrains.exposed.v1.core.ResultRow
 import java.net.InetSocketAddress
 
 interface Server : AppFriendly, Identified, Iterable<Pair<Int, Server.Endpoint>>, Nameable {
+    val nameOrId: String
+
     operator fun get(key: Endpoint): Int?
 
     operator fun set(key: Endpoint, value: Int?)

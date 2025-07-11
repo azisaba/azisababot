@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app
+package net.azisaba.azisababot.app.command
 
 import dev.kord.common.Locale
 import dev.kord.common.entity.ButtonStyle
@@ -80,9 +80,6 @@ fun abmServerListCommand(kord: Kord) {
 }
 
 private fun buildPage(page: Int, group: ServerGroup?, builder: MessageBuilder) {
-    builder.components = mutableListOf()
-    builder.embeds = mutableListOf()
-
     val servers = (group?.toList() ?: Server.servers()).toMutableList().chunked(SERVER_PER_PAGE)
 
     if (servers.isEmpty()) {

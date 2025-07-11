@@ -22,6 +22,9 @@ internal class ServerGroupImpl(
             }
         }
 
+    override val nameOrId: String
+        get() = name ?: id
+
     override val size: Int
         get() = servers.size
 

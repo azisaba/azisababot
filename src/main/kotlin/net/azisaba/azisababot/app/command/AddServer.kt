@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app
+package net.azisaba.azisababot.app.command
 
 import dev.kord.common.Locale
 import dev.kord.core.Kord
@@ -47,11 +47,11 @@ fun abmAddServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateE
             this.name = name
         }
         response.respond {
-            content = i18n("command.abm_create_server.success", server.toAppName())
+            content = i18n("command.abm_add_server.success", server.toAppName())
         }
     } catch (e: Exception) {
         response.respond {
-            content = i18n("command.abm_create_server.failure", e.message)
+            content = i18n("command.abm_add_server.failure", e.message)
         }
     }
 }

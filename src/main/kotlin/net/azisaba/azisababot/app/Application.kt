@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import net.azisaba.azisababot.app.command.*
 import net.azisaba.azisababot.config
 import net.azisaba.azisababot.logger
 
@@ -16,13 +17,23 @@ suspend fun app() {
     kord = Kord(System.getenv(config.app.tokenEnv))
     kord.login {
         kord.guilds.collect { guild ->
+            abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
+
+            abmEndpointListCommand(guild)
+
+            abmRemoveEndpointCommand(guild)
             abmRemoveServerCommand(guild)
 
             abmServerListCommand(guild)
         }
 
+        abmAddEndpointCommand(kord)
         abmAddServerCommand(kord)
+
+        abmEndpointListCommand(kord)
+
+        abmRemoveEndpointCommand(kord)
         abmRemoveServerCommand(kord)
 
         abmServerListCommand(kord)
@@ -34,8 +45,19 @@ suspend fun app() {
 fun updateServerCommands() {
     coroutineScope.launch {
         kord.guilds.collect { guild ->
+            abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
+            abmEndpointListCommand(guild)
+            abmEndpointListCommand(guild)
             abmRemoveServerCommand(guild)
+        }
+    }
+}
+
+fun updateServerGroupCommands() {
+    coroutineScope.launch {
+        kord.guilds.collect { guild ->
+            abmServerListCommand(guild)
         }
     }
 }

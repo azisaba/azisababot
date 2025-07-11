@@ -7,6 +7,8 @@ import net.azisaba.azisababot.server.Server
 import org.jetbrains.exposed.v1.core.ResultRow
 
 interface ServerGroup : AppFriendly, Identified, Iterable<Server>, Nameable {
+    val nameOrId: String
+
     val size: Int
 
     operator fun plusAssign(server: Server)

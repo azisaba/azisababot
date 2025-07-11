@@ -24,6 +24,9 @@ internal class ServerImpl(
             }
         }
 
+    override val nameOrId: String
+        get() = name ?: id
+
     private val endpoints: MutableMap<Server.Endpoint, Int> = mutableMapOf()
 
     private val endpointTable: EndpointTable = EndpointTable(this).also {
@@ -34,6 +37,17 @@ internal class ServerImpl(
 
     init {
         Server.instances += this
+        transaction {
+            endpointTable.selectAll().forEach { row ->
+                val host = row[endpointTable.host]
+                val port = row[endpointTable.port]
+                val endpoint = Server.Endpoint.of(host, port)
+
+                val priority = row[endpointTable.priority]
+
+                endpoints[endpoint] = priority
+            }
+        }
     }
 
     override fun get(key: Server.Endpoint): Int? = endpoints[key]

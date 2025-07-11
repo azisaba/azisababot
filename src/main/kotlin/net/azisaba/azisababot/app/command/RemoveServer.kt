@@ -1,4 +1,4 @@
-package net.azisaba.azisababot.app
+package net.azisaba.azisababot.app.command
 
 import dev.kord.common.Locale
 import dev.kord.core.Kord
@@ -36,7 +36,7 @@ fun abmRemoveServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCrea
 
     if (server == null) {
         interaction.respondEphemeral {
-            content = i18n("command.server_not_found", serverId)
+            content = i18n("command.errors.server_not_found", serverId)
         }
         return@on
     }
