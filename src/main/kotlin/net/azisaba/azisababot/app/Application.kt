@@ -19,44 +19,42 @@ suspend fun app() {
     kord = Kord(System.getenv(config.app.tokenEnv))
     kord.login {
         kord.guilds.collect { guild ->
-            abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
-
+            abmRemoveServerCommand(guild)
+            abmServerListCommand(guild)
             abmAddServerToGroupCommand(guild)
+            abmRemoveServerFromGroupCommand(guild)
 
             abmCreateGroupCommand(guild)
             abmDeleteGroupCommand(guild)
-
-            abmEndpointListCommand(guild)
-
             abmGroupListCommand(guild)
 
+            abmAddEndpointCommand(guild)
             abmRemoveEndpointCommand(guild)
-            abmRemoveServerCommand(guild)
+            abmEndpointListCommand(guild)
 
-            abmRemoveServerFromGroupCommand(guild)
-
-            abmServerListCommand(guild)
+            abmCreateScheduleCommand(guild)
+            abmDeleteGroupCommand(guild)
+            abmScheduleListCommand(guild)
         }
 
-        abmAddEndpointCommand(kord)
         abmAddServerCommand(kord)
-
+        abmRemoveServerCommand(kord)
+        abmServerListCommand(kord)
         abmAddServerToGroupCommand(kord)
+        abmRemoveServerFromGroupCommand(kord)
 
         abmCreateGroupCommand(kord)
         abmDeleteGroupCommand(kord)
-
-        abmEndpointListCommand(kord)
-
         abmGroupListCommand(kord)
 
+        abmAddEndpointCommand(kord)
         abmRemoveEndpointCommand(kord)
-        abmRemoveServerCommand(kord)
+        abmEndpointListCommand(kord)
 
-        abmRemoveServerFromGroupCommand(kord)
-
-        abmServerListCommand(kord)
+        abmCreateScheduleCommand(kord)
+        abmDeleteGroupCommand(kord)
+        abmScheduleListCommand(kord)
 
         logger.info("Bot started")
     }
@@ -65,12 +63,12 @@ suspend fun app() {
 fun updateServerCommands() {
     coroutineScope.launch {
         kord.guilds.collect { guild ->
-            abmAddEndpointCommand(guild)
             abmAddServerCommand(guild)
-            abmAddServerToGroupCommand(guild)
-            abmEndpointListCommand(guild)
-            abmEndpointListCommand(guild)
             abmRemoveServerCommand(guild)
+            abmAddServerToGroupCommand(guild)
+
+            abmAddEndpointCommand(guild)
+            abmEndpointListCommand(guild)
         }
     }
 }
@@ -78,10 +76,13 @@ fun updateServerCommands() {
 fun updateServerGroupCommands() {
     coroutineScope.launch {
         kord.guilds.collect { guild ->
-            abmAddServerToGroupCommand(guild)
-            abmDeleteGroupCommand(guild)
-            abmRemoveServerFromGroupCommand(guild)
             abmServerListCommand(guild)
+            abmAddServerToGroupCommand(guild)
+            abmRemoveServerFromGroupCommand(guild)
+
+            abmDeleteGroupCommand(guild)
+
+            abmCreateScheduleCommand(guild)
         }
     }
 }

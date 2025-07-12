@@ -77,30 +77,30 @@ internal data class CrawlScheduleImpl(
     }
 
     internal class BuilderImpl : CrawlSchedule.Builder {
-        override var name: String? = null
+        override var id: String? = null
 
         override var cron: Cron? = null
 
         override var group: ServerGroup? = null
 
         override fun build(): CrawlSchedule {
-            checkNotNull(name) { "Name not set" }
+            checkNotNull(id) { "ID not set" }
             checkNotNull(cron) { "Cron not set" }
-            check(CrawlSchedule.NAME_PATTERN.matches(name!!)) { "Invalid name: must match the pattern ${CrawlSchedule.NAME_PATTERN.pattern}" }
+            check(CrawlSchedule.NAME_PATTERN.matches(id!!)) { "Invalid name: must match the pattern ${CrawlSchedule.NAME_PATTERN.pattern}" }
 
             transaction {
-                check(CrawlScheduleTable.selectAll().where { CrawlScheduleTable.id eq this@BuilderImpl.name!! }.none()) {
-                    "Name is already in use: ${this@BuilderImpl.name}"
+                check(CrawlScheduleTable.selectAll().where { CrawlScheduleTable.id eq this@BuilderImpl.id!! }.none()) {
+                    "ID is already in use: ${this@BuilderImpl.id}"
                 }
 
                 CrawlScheduleTable.insert {
-                    it[id] = this@BuilderImpl.name!!
+                    it[id] = this@BuilderImpl.id!!
                     it[cron] = this@BuilderImpl.cron!!.asString()
                     it[target] = this@BuilderImpl.group?.id
                 }
             }
 
-            return CrawlScheduleImpl(name!!, cron!!, group)
+            return CrawlScheduleImpl(id!!, cron!!, group)
         }
     }
 }

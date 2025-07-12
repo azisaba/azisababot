@@ -1,10 +1,10 @@
 package net.azisaba.azisababot.crawler
 
+import net.azisaba.azisababot.crawler.snapshot.Snapshot
+import net.azisaba.azisababot.crawler.snapshot.Snapshots
 import net.azisaba.azisababot.minecraft
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.ServerStatus
-import net.azisaba.azisababot.crawler.snapshot.Snapshot
-import net.azisaba.azisababot.crawler.snapshot.Snapshots
 
 suspend fun crawl(server: Server, timestamp: Long = System.currentTimeMillis(), saveToDatabase: Boolean = false): Snapshot {
     var status: ServerStatus? = null

@@ -105,7 +105,7 @@ internal class ServerImpl(
         override val host: String,
         override val port: Int
     ) : Server.Endpoint {
-        override fun toINetSocketAddress(): InetSocketAddress = InetSocketAddress.createUnresolved(host, port)
+        override fun toINetSocketAddress(): InetSocketAddress = InetSocketAddress(host, port)
 
         override fun toString(): String = "$host:$port"
     }

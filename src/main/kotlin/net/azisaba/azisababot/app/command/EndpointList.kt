@@ -15,7 +15,7 @@ import dev.kord.rest.builder.message.actionRow
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-endpoint0list"
+private const val COMMAND_NAME: String = "abm-endpoint-list"
 
 private const val ENDPOINT_PER_PAGE: Int = 10
 

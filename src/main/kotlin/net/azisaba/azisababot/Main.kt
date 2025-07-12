@@ -40,11 +40,6 @@ val minecraft: MinecraftClient = MinecraftClient.client(config.client.protocolVe
 
 suspend fun main() {
     transaction {
-        SchemaUtils.create(CrawlScheduleTable)
-        CrawlScheduleTable.selectAll().forEach { row ->
-            CrawlSchedule.load(row)
-        }
-
         SchemaUtils.create(ServerTable)
         ServerTable.selectAll().forEach { row ->
             Server.load(row)
@@ -53,6 +48,11 @@ suspend fun main() {
         SchemaUtils.create(ServerGroupTable)
         ServerGroupTable.selectAll().forEach { row ->
             ServerGroup.load(row)
+        }
+
+        SchemaUtils.create(CrawlScheduleTable)
+        CrawlScheduleTable.selectAll().forEach { row ->
+            CrawlSchedule.load(row)
         }
     }
 

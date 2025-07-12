@@ -33,7 +33,7 @@ interface CrawlSchedule : Identified {
 
     @CrawlScheduleDsl
     interface Builder {
-        var name: String?
+        var id: String?
 
         var cron: Cron?
 
