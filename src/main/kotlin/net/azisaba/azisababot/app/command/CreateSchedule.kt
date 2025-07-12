@@ -13,9 +13,9 @@ import net.azisaba.azisababot.cronParser
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-create-schedule"
+private const val COMMAND_NAME: String = "abt-create-schedule"
 
-suspend fun abmCreateScheduleCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Create a crawl schedule") {
+suspend fun abtCreateScheduleCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Create a crawl schedule") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "クロールスケジュールを作成します"
     )
@@ -47,7 +47,7 @@ suspend fun abmCreateScheduleCommand(guild: Guild) = guild.createChatInputComman
     }
 }
 
-fun abmCreateScheduleCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtCreateScheduleCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val id = command.strings["id"]!!

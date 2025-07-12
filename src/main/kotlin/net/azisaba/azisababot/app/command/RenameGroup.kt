@@ -12,9 +12,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-rename-group"
+private const val COMMAND_NAME: String = "abt-rename-group"
 
-suspend fun abmRenameGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Rename a server group") {
+suspend fun abtRenameGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Rename a server group") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループの名前を変更します"
     )
@@ -38,7 +38,7 @@ suspend fun abmRenameGroupCommand(guild: Guild) = guild.createChatInputCommand(C
     }
 }
 
-fun abmRenameGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtRenameGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val groupId = command.strings["group"]!!

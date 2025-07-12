@@ -12,9 +12,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-delete-group"
+private const val COMMAND_NAME: String = "abt-delete-group"
 
-suspend fun abmDeleteGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Delete a server group") {
+suspend fun abtDeleteGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Delete a server group") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループを消去します"
     )
@@ -30,7 +30,7 @@ suspend fun abmDeleteGroupCommand(guild: Guild) = guild.createChatInputCommand(C
     }
 }
 
-fun abmDeleteGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtDeleteGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val groupId = command.strings["group"]!!

@@ -13,9 +13,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-remove-endpoint"
+private const val COMMAND_NAME: String = "abt-remove-endpoint"
 
-suspend fun abmRemoveEndpointCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Remove an endpoint from a server") {
+suspend fun abtRemoveEndpointCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Remove an endpoint from a server") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "エンドポイントをサーバーから削除します"
     )
@@ -48,7 +48,7 @@ suspend fun abmRemoveEndpointCommand(guild: Guild) = guild.createChatInputComman
     }
 }
 
-fun abmRemoveEndpointCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtRemoveEndpointCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val serverId = command.strings["server"]!!

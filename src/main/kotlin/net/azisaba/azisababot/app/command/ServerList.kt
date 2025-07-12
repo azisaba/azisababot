@@ -19,15 +19,15 @@ import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 import java.util.*
 
-private const val COMMAND_NAME: String = "abm-server-list"
+private const val COMMAND_NAME: String = "abt-server-list"
 
 private const val SERVER_PER_PAGE: Int = 10
 
-private val buttonRegex: Regex = Regex("""server-list-(${ServerGroup.ID_REGEX.pattern})-(\d+)""")
+private val buttonRegex: Regex = Regex("""server-list-(${ServerGroup.ID_REGEX.pattern.removePrefix("^").removeSuffix("$")})-(\d+)""")
 
 private val dummyGroupId: String = UUID.randomUUID().toString().replace('-', '_')
 
-suspend fun abmServerListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the servers") {
+suspend fun abtServerListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the servers") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーをリスト表示します"
     )
@@ -51,7 +51,7 @@ suspend fun abmServerListCommand(guild: Guild) = guild.createChatInputCommand(CO
     }
 }
 
-fun abmServerListCommand(kord: Kord) {
+fun abtServerListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
         val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()

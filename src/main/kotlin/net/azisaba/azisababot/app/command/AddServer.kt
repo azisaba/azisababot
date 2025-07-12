@@ -11,9 +11,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-add-server"
+private const val COMMAND_NAME: String = "abt-add-server"
 
-suspend fun abmAddServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add a server to crawl") {
+suspend fun abtAddServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add a server to crawl") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "クロールするサーバーを追加します"
     )
@@ -35,7 +35,7 @@ suspend fun abmAddServerCommand(guild: Guild) = guild.createChatInputCommand(COM
     }
 }
 
-fun abmAddServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtAddServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val id = command.strings["id"]!!

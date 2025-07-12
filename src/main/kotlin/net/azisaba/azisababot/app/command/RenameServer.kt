@@ -12,9 +12,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-rename-server"
+private const val COMMAND_NAME: String = "abt-rename-server"
 
-suspend fun abmRenameServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Rename a server") {
+suspend fun abtRenameServerCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Rename a server") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーの名前を変更します"
     )
@@ -38,7 +38,7 @@ suspend fun abmRenameServerCommand(guild: Guild) = guild.createChatInputCommand(
     }
 }
 
-fun abmRenameServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtRenameServerCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val serverId = command.strings["server"]!!

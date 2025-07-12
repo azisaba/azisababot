@@ -15,13 +15,13 @@ import dev.kord.rest.builder.message.actionRow
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-endpoint-list"
+private const val COMMAND_NAME: String = "abt-endpoint-list"
 
 private const val ENDPOINT_PER_PAGE: Int = 10
 
-private val buttonRegex: Regex = Regex(""""endpoint-list-(${Server.ID_REGEX.pattern})-(\d+)"""")
+private val buttonRegex: Regex = Regex(""""endpoint-list-(${Server.ID_REGEX.pattern.removePrefix("^").removeSuffix("$")})-(\d+)"""")
 
-suspend fun abmEndpointListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the endpoints of a server") {
+suspend fun abtEndpointListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List the endpoints of a server") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーのエンドポイントをリスト表示します"
     )
@@ -44,7 +44,7 @@ suspend fun abmEndpointListCommand(guild: Guild) = guild.createChatInputCommand(
     }
 }
 
-fun abmEndpointListCommand(kord: Kord) {
+fun abtEndpointListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
         val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()

@@ -1,5 +1,6 @@
 package net.azisaba.azisababot.crawler.snapshot
 
+import com.cronutils.model.Cron
 import net.azisaba.azisababot.server.Server
 
 interface Snapshots {
@@ -20,7 +21,7 @@ interface Snapshots {
     companion object {
         internal val instances: MutableMap<Server, Snapshots> = mutableMapOf()
 
-        fun of(server: Server): Snapshots = instances[server] ?: SnapshotsImpl(server)
+        fun snapshots(server: Server): Snapshots = instances[server] ?: SnapshotsImpl(server)
     }
 
     interface Query {
@@ -30,7 +31,7 @@ interface Snapshots {
 
         fun maxPlayers(maxPlayers: Int): Query
 
-        fun cron(cronExpression: String): Query
+        fun cron(cron: Cron): Query
 
         fun orderByTimestamp(descending: Boolean = true): Query
 

@@ -16,13 +16,13 @@ import dev.kord.rest.builder.message.actionRow
 import net.azisaba.azisababot.crawler.schedule.CrawlSchedule
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-schedule-list"
+private const val COMMAND_NAME: String = "abt-schedule-list"
 
 private const val SCHEDULE_PER_PAGE: Int = 10
 
 private val buttonRegex: Regex = Regex("""schedule-list-(\d+)""")
 
-suspend fun abmScheduleListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List crawl schedules") {
+suspend fun abtScheduleListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List crawl schedules") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "クロールスケジュールをリスト表示します"
     )
@@ -36,7 +36,7 @@ suspend fun abmScheduleListCommand(guild: Guild) = guild.createChatInputCommand(
     }
 }
 
-fun abmScheduleListCommand(kord: Kord) {
+fun abtScheduleListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
         val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()

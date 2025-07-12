@@ -7,6 +7,7 @@ kaml = "0.73.0"
 kord = "0.15.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.2"
+kotlinx-dataframe = "1.0.0-Beta2"
 kotlinx-kandy = "0.8.0"
 kotlinx-serialization = "1.9.0"
 logback = "1.5.18"
@@ -22,6 +23,7 @@ hikari-cp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
 kord = { module = "dev.kord:kord-core", version.ref = "kord" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "kotlinx-dataframe" }
 kotlinx-kandy = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kotlinx-kandy" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }

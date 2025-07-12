@@ -18,7 +18,7 @@ internal class ServerImpl(
             require(value == null || Server.NAME_REGEX.matches(value)) { "Invalid name: must match the pattern ${Server.NAME_REGEX.pattern}" }
             field = value
             transaction {
-                ServerTable.update({ ServerTable.id eq id }) {
+                ServerTable.update({ ServerTable.id eq this@ServerImpl.id }) {
                     it[name] = value
                 }
             }
@@ -88,13 +88,14 @@ internal class ServerImpl(
 
         updateServerCommands()
 
-        Snapshots.of(this).drop()
+        Snapshots.snapshots(this).drop()
 
         ServerGroup.groups(this).forEach { group ->
             group -= this
         }
 
         transaction {
+            ServerTable.deleteWhere { id eq this@ServerImpl.id }
             SchemaUtils.drop(endpointTable)
         }
     }

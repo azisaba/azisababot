@@ -13,9 +13,9 @@ import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-add-server-to-group"
+private const val COMMAND_NAME: String = "abt-add-server-to-group"
 
-suspend fun abmAddServerToGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add a server to a server group") {
+suspend fun abtAddServerToGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add a server to a server group") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループにサーバーを追加します"
     )
@@ -41,7 +41,7 @@ suspend fun abmAddServerToGroupCommand(guild: Guild) = guild.createChatInputComm
     }
 }
 
-fun abmAddServerToGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtAddServerToGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val groupId = command.strings["group"]!!

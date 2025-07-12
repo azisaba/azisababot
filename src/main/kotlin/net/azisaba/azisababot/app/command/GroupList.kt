@@ -16,13 +16,13 @@ import dev.kord.rest.builder.message.actionRow
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-group-list"
+private const val COMMAND_NAME: String = "abt-group-list"
 
 private const val GROUP_PER_PAGE: Int = 10
 
 private val buttonRegex: Regex = Regex("""group-list-(\d+)""")
 
-suspend fun abmGroupListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List server groups") {
+suspend fun abtGroupListCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "List server groups") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループをリスト表示します"
     )
@@ -36,7 +36,7 @@ suspend fun abmGroupListCommand(guild: Guild) = guild.createChatInputCommand(COM
     }
 }
 
-fun abmGroupListCommand(kord: Kord) {
+fun abtGroupListCommand(kord: Kord) {
     kord.on<ChatInputCommandInteractionCreateEvent> {
         val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
         val response = interaction.deferEphemeralResponse()

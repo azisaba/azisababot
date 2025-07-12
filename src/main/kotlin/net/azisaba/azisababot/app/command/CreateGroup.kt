@@ -11,9 +11,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-create-group"
+private const val COMMAND_NAME: String = "abt-create-group"
 
-suspend fun abmCreateGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Create a server group") {
+suspend fun abtCreateGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Create a server group") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループを作成します"
     )
@@ -35,7 +35,7 @@ suspend fun abmCreateGroupCommand(guild: Guild) = guild.createChatInputCommand(C
     }
 }
 
-fun abmCreateGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtCreateGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val response = interaction.deferPublicResponse()

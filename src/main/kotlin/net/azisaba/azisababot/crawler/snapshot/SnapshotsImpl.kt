@@ -1,5 +1,6 @@
 package net.azisaba.azisababot.crawler.snapshot
 
+import com.cronutils.model.Cron
 import com.cronutils.model.time.ExecutionTime
 import net.azisaba.azisababot.cronParser
 import net.azisaba.azisababot.server.Server
@@ -71,7 +72,7 @@ internal class SnapshotsImpl(override val server: Server) : Snapshots {
         private var minPlayers: Int? = null
         private var maxPlayers: Int? = null
 
-        private var cronExpression: String? = null
+        private var cron: Cron? = null
 
         private var orderDesc: Boolean = true
 
@@ -95,8 +96,8 @@ internal class SnapshotsImpl(override val server: Server) : Snapshots {
             this.maxPlayers = maxPlayers
         }
 
-        override fun cron(cronExpression: String): Snapshots.Query = apply {
-            this.cronExpression = cronExpression
+        override fun cron(cron: Cron): Snapshots.Query = apply {
+            this.cron = cron
         }
 
         override fun orderByTimestamp(descending: Boolean): Snapshots.Query = apply {
@@ -158,8 +159,7 @@ internal class SnapshotsImpl(override val server: Server) : Snapshots {
 
             val raw = limited.map { Snapshot.snapshot(it, snapshotTable) }
 
-            val filtered = if (cronExpression != null) {
-                val cron = cronParser.parse(cronExpression)?.also { it.validate() }
+            val filtered = if (cron != null) {
                 val execTime = ExecutionTime.forCron(cron)
                 raw.filter {
                     val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.timestamp), ZoneId.systemDefault())

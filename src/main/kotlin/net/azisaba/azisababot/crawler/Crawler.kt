@@ -20,7 +20,7 @@ suspend fun crawl(server: Server, timestamp: Long = System.currentTimeMillis(), 
         if (status != null && ping != null) break
     }
 
-    val snapshots = Snapshots.of(server)
+    val snapshots = Snapshots.snapshots(server)
     val snapshot = Snapshot.snapshot(timestamp, status, ping)
     if (saveToDatabase) {
         snapshots += snapshot

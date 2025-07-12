@@ -13,9 +13,9 @@ import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.server.group.ServerGroup
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-remove-server-from-group"
+private const val COMMAND_NAME: String = "abt-remove-server-from-group"
 
-suspend fun abmRemoveServerFromGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Remove a server from the server group") {
+suspend fun abtRemoveServerFromGroupCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Remove a server from the server group") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーグループからサーバーを削除します"
     )
@@ -41,7 +41,7 @@ suspend fun abmRemoveServerFromGroupCommand(guild: Guild) = guild.createChatInpu
     }
 }
 
-fun abmRemoveServerFromGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtRemoveServerFromGroupCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val groupId = command.strings["group"]!!

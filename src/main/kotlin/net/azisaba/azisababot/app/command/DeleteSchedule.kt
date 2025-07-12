@@ -12,7 +12,7 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.crawler.schedule.CrawlSchedule
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-delete-schedule"
+private const val COMMAND_NAME: String = "abt-delete-schedule"
 
 suspend fun abmDeleteScheduleCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Delete a crawl schedule") {
     descriptionLocalizations = mutableMapOf(

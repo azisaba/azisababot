@@ -13,9 +13,9 @@ import dev.kord.rest.builder.interaction.string
 import net.azisaba.azisababot.server.Server
 import net.azisaba.azisababot.util.i18n
 
-private const val COMMAND_NAME: String = "abm-add-endpoint"
+private const val COMMAND_NAME: String = "abt-add-endpoint"
 
-suspend fun abmAddEndpointCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add an endpoint to a server") {
+suspend fun abtAddEndpointCommand(guild: Guild) = guild.createChatInputCommand(COMMAND_NAME, "Add an endpoint to a server") {
     descriptionLocalizations = mutableMapOf(
         Locale.JAPANESE to "サーバーにエンドポイントを追加します"
     )
@@ -56,7 +56,7 @@ suspend fun abmAddEndpointCommand(guild: Guild) = guild.createChatInputCommand(C
     }
 }
 
-fun abmAddEndpointCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
+fun abtAddEndpointCommand(kord: Kord) = kord.on<ChatInputCommandInteractionCreateEvent> {
     val command = interaction.command.takeIf { it.rootName == COMMAND_NAME } ?: return@on
 
     val serverId = command.strings["server"]!!

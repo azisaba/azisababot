@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    implementation(kotlin("reflect"))
+
     implementation(libs.adventure.api)
     implementation(libs.adventure.gson)
     implementation(libs.cronutils)
@@ -20,6 +22,7 @@ dependencies {
     implementation(libs.kaml)
     implementation(libs.kord)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.dataframe)
     implementation(libs.kotlinx.kandy)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.logback.classic)
