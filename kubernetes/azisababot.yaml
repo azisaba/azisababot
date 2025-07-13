@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azisababot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azisababot
+  template:
+    metadata:
+      labels:
+        app: azisababot
+    spec:
+      containers:
+        - name: azisababot
+          image: ghcr.io/azisaba/azisababot:latest
+          env:
+            - name: DATABASE_USERNAME
+              value: root
+            - name: DATABASE_PASSWORD
+              value: password
